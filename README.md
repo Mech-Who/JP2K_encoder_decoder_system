@@ -56,6 +56,15 @@
 
 由于需要可视化界面，因此后续开发将在 Windows 系统上进行。
 
+工具程序所在目录：`<anaconda环境根目录>\Lib\site-packages\PySide6`
+
+常用工具：
+
+- designer.exe：UI设计，用法 `designer <*.ui>`
+- uic.exe：根据ui文件生成py文件，用法 `uic -g <python|cpp> <*.ui> -o <*.py>`
+- rcc.exe：根据资源文件生成py文件，用法 `rcc -g <cpp|python|python2> <*.qrc> -o <*.py>`
+
+
 ## 四、工作进度
 
 - [x] 流程实现
