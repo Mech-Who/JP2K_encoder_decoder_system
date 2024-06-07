@@ -25,6 +25,10 @@
 - PyWavelets
 - opencv-python
 
+构建GUI所需的依赖包：
+
+- pyside6
+
 ### 二、主要内容
 
 - 编码过程
