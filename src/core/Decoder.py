@@ -44,6 +44,7 @@ class JP2KDecoder(Decoder):
         decoded_tiles = JP2KDecoder.get_tiles_from_data(decoded_blocks, self.tile_size, self.q_factor)
         decode_img = JP2KDecoder.merge_image(decoded_tiles, self.tile_size, self.image_shape)
         decode_img = JP2KDecoder.convertColor2RGB(decode_img)
+        decode_img = cv2.cvtColor(decode_img, cv2.COLOR_RGB2BGR)
         return decode_img
 
     def read(self, image_path: str) -> ByteString:
