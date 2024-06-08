@@ -28,11 +28,11 @@ class JP2KDecoder(Decoder):
     """
     JPEG2000 解码器
     """
-    def __init__(self, tile_size: int=128, q_factor: int=5, image_shape: Tuple=(768, 512)) -> None:
+    def __init__(self, q_factor: int=5, tile_size: int=128) -> None:
         # HACK: 之后改成从码流中获取
         self.tile_size = tile_size
         self.q_factor = q_factor
-        self.image_shape = image_shape
+        self.image_shape = (768, 512)
     
     def decode(self, bitstream: ByteString) -> np.ndarray:
         """
