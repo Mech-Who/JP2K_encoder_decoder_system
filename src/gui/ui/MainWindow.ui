@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>801</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="CentralWidget">
+   <widget class="QTabWidget" name="settingTab">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>221</width>
+      <height>531</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <widget class="QWidget" name="otherTab">
+     <attribute name="icon">
+      <iconset theme="tool">
+       <normaloff>.</normaloff>.</iconset>
+     </attribute>
+     <attribute name="title">
+      <string>文件设置</string>
+     </attribute>
+     <widget class="QWidget" name="gridLayoutWidget_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>201</width>
+        <height>139</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="fileLayout">
+       <item row="4" column="0">
+        <widget class="QLabel" name="decodedFileLabel">
+         <property name="text">
+          <string>解压文件名：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="originFileLabel">
+         <property name="text">
+          <string>原始文件：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QLineEdit" name="decodedLineEdit"/>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QLineEdit" name="encodedLineEdit"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="encodedFileLabel">
+         <property name="text">
+          <string>压缩文件名：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="selectOriginFileButton">
+         <property name="text">
+          <string>选择源图片</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QLineEdit" name="originFileLineEdit"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>201</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="buttonLayout">
+       <item>
+        <widget class="QPushButton" name="encodeButton">
+         <property name="text">
+          <string>编码</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="decodeButton">
+         <property name="text">
+          <string>解码</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="baseTab">
+     <attribute name="title">
+      <string>压缩设置</string>
+     </attribute>
+     <widget class="QWidget" name="gridLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>190</y>
+        <width>201</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="imageSizeLayout">
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="heightLineEdit"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="widthLabel">
+         <property name="text">
+          <string>宽（Width）：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="widthLineEdit"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="heightLabel">
+         <property name="text">
+          <string>高（Height）：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="imageSizeLabel">
+         <property name="text">
+          <string>图片尺寸：</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="gridLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>201</width>
+        <height>86</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="qFactorLayout">
+       <item row="2" column="2">
+        <widget class="QLabel" name="qFactorMaxLabel">
+         <property name="text">
+          <string>Max:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="qFactorMinLabel">
+         <property name="text">
+          <string>Min:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="qFactorMinLineEdit"/>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLineEdit" name="qFactorMaxLineEdit"/>
+       </item>
+       <item row="0" column="2" colspan="2">
+        <widget class="QLineEdit" name="qFactorLineEdit"/>
+       </item>
+       <item row="1" column="0" colspan="4">
+        <widget class="QSlider" name="qFactorHorizontalSlider">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBelow</enum>
+         </property>
+         <property name="tickInterval">
+          <number>1000</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="qFactorLabel">
+         <property name="text">
+          <string>量化系数：</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="gridLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>201</width>
+        <height>86</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="tileSizeLayout">
+       <item row="2" column="3">
+        <widget class="QLineEdit" name="tileSizeMaxLineEdit"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="tileSizeMinLineEdit"/>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="tileSizeMaxLabel">
+         <property name="text">
+          <string>Max:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="tileSizeMinLabel">
+         <property name="text">
+          <string>Min:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="4">
+        <widget class="QSlider" name="tileSizeHorizontalSlider">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBelow</enum>
+         </property>
+         <property name="tickInterval">
+          <number>256</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="tileSizeLabel">
+         <property name="text">
+          <string>分块大小：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" colspan="2">
+        <widget class="QLineEdit" name="tileSizeLineEdit"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QTabWidget" name="imageTab">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>10</y>
+      <width>551</width>
+      <height>531</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="originTab">
+     <attribute name="title">
+      <string>原始图像</string>
+     </attribute>
+     <widget class="QGraphicsView" name="originGraphicsView">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>531</width>
+        <height>491</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="encodedTab">
+     <attribute name="title">
+      <string>压缩图像</string>
+     </attribute>
+     <widget class="QGraphicsView" name="encodedGraphicsView">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>531</width>
+        <height>491</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="decodedTab">
+     <attribute name="title">
+      <string>解压图像</string>
+     </attribute>
+     <widget class="QGraphicsView" name="decodedGraphicsView">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>531</width>
+        <height>491</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="waveletTab">
+     <attribute name="title">
+      <string>小波图像</string>
+     </attribute>
+     <widget class="QGraphicsView" name="ltGraphicsView">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>261</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="rtGraphicsView">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>10</y>
+        <width>261</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="lbGraphicsView">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>261</y>
+        <width>261</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="rbGraphicsView">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>261</y>
+        <width>261</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="graphTab">
+     <attribute name="title">
+      <string>图表展示</string>
+     </attribute>
+     <widget class="QWebEngineView" name="graphWebEngineView">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>531</width>
+        <height>491</height>
+       </rect>
+      </property>
+      <property name="url">
+       <url>
+        <string>about:blank</string>
+       </url>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <zorder>imageTab</zorder>
+   <zorder>settingTab</zorder>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>801</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
