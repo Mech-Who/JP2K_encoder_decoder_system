@@ -10,6 +10,7 @@ import src.core.utils as utils
 
 BYTE_LENGTH = 4
 
+
 class Decoder(ABC):
     """
     Decoder 抽象基类
@@ -17,23 +18,25 @@ class Decoder(ABC):
     @abstractmethod
     def decode(self, image_path, decoded_path):
         raise NotImplementedError("抽象类中不进行实现: Decoder.decode()!")
-    
+
     def read(self, file_path):
         raise NotImplementedError("抽象类中不进行实现: Decoder.read()!")
 
     def save(self, save_path, bitstream):
         raise NotImplementedError("抽象类中不进行实现: Decoder.save()!")
 
+
 class JP2KDecoder(Decoder):
     """
     JPEG2000 解码器
     """
-    def __init__(self, q_factor: int=5, tile_size: int=128) -> None:
+
+    def __init__(self, q_factor: int = 5, tile_size: int = 128) -> None:
         # HACK: 之后改成从码流中获取
         self.tile_size = tile_size
         self.q_factor = q_factor
         self.image_shape = (768, 512)
-    
+
     def decode(self, bitstream: ByteString) -> np.ndarray:
         """
         针对JP2K格式的文件进行解码，并保存到新文件
@@ -41,8 +44,10 @@ class JP2KDecoder(Decoder):
         :param save_path: 新文件路径
         """
         decoded_blocks = JP2KDecoder.decode_bitstream(bitstream)
-        decoded_tiles = JP2KDecoder.get_tiles_from_data(decoded_blocks, self.tile_size, self.q_factor)
-        decode_img = JP2KDecoder.merge_image(decoded_tiles, self.tile_size, self.image_shape)
+        decoded_tiles = JP2KDecoder.get_tiles_from_data(
+            decoded_blocks, self.tile_size, self.q_factor)
+        decode_img = JP2KDecoder.merge_image(
+            decoded_tiles, self.tile_size, self.image_shape)
         decode_img = JP2KDecoder.convertColor2RGB(decode_img)
         decode_img = cv2.cvtColor(decode_img, cv2.COLOR_RGB2BGR)
         return decode_img
@@ -52,12 +57,12 @@ class JP2KDecoder(Decoder):
         with open(image_path, 'rb') as f:
             bitstream = f.read()
         return bitstream
-    
+
     def save(self, save_path: str, img: np.ndarray) -> None:
         cv2.imwrite(save_path, img)
 
     @staticmethod
-    def deserialize_huffman_tree(serialized_tree:List[Tuple[int, str]]) -> Dict[str,int]:
+    def deserialize_huffman_tree(serialized_tree: List[Tuple[int, str]]) -> Dict[str, int]:
         """反序列化霍夫曼树"""
         return {code: symbol for symbol, code in serialized_tree}
 
@@ -77,7 +82,7 @@ class JP2KDecoder(Decoder):
                 decoded_data.append(huffman_tree[code])
                 code = ""
         return decoded_data
-    
+
     @staticmethod
     def decode_bitstream(bitstream: ByteString) -> List[List[int]]:
         """
@@ -91,7 +96,7 @@ class JP2KDecoder(Decoder):
             # 读取编码数据的长度
             encoded_length = struct.unpack_from('I', bitstream, offset)[0]
             offset += BYTE_LENGTH
-            
+
             # 读取编码数据
             encoded_data = bitstream[offset:offset + encoded_length]
             encoded_data = encoded_data.decode('utf-8')
@@ -100,7 +105,7 @@ class JP2KDecoder(Decoder):
             # 读取霍夫曼树的长度
             huffman_tree_length = struct.unpack_from('I', bitstream, offset)[0]
             offset += BYTE_LENGTH
-            
+
             # 读取霍夫曼树
             serialized_tree = []
             for _ in range(huffman_tree_length):
@@ -113,17 +118,19 @@ class JP2KDecoder(Decoder):
                 code = bitstream[offset:offset + code_length]
                 code = code.decode('utf-8')
                 offset += code_length
-                
+
                 serialized_tree.append((symbol, code))
-            
-            huffman_tree = JP2KDecoder.deserialize_huffman_tree(serialized_tree)
-            decoded_data = JP2KDecoder.huffman_decoding(encoded_data, huffman_tree)
+
+            huffman_tree = JP2KDecoder.deserialize_huffman_tree(
+                serialized_tree)
+            decoded_data = JP2KDecoder.huffman_decoding(
+                encoded_data, huffman_tree)
 
             # 将解码数据添加到块列表
             data_blocks.append(decoded_data)
-        
+
         return data_blocks
-    
+
     @staticmethod
     def inverse_quantize(quantized_coeffs: Tuple, q_factor: int) -> Tuple:
         """
@@ -138,7 +145,7 @@ class JP2KDecoder(Decoder):
         cV = cV * q_factor
         cD = cD * q_factor
         return cA, (cH, cV, cD)
-    
+
     @staticmethod
     def inverse_quantize_from_block(block: List[int], tile_size: int) -> Tuple:
         """
@@ -150,11 +157,13 @@ class JP2KDecoder(Decoder):
         half_size = int(tile_size / 2)
         fre_size = half_size**2
         cA = np.array(block[:fre_size]).reshape((half_size, half_size))
-        cH = np.array(block[fre_size: fre_size*2]).reshape((half_size, half_size))
-        cV = np.array(block[fre_size*2: fre_size*3]).reshape((half_size, half_size))
+        cH = np.array(block[fre_size: fre_size*2]
+                      ).reshape((half_size, half_size))
+        cV = np.array(block[fre_size*2: fre_size*3]
+                      ).reshape((half_size, half_size))
         cD = np.array(block[fre_size*3:]).reshape((half_size, half_size))
         return cA, (cH, cV, cD)
-    
+
     @staticmethod
     def inverse_discrete_wavelet_transform(coeffs: Tuple) -> Tuple:
         """
@@ -163,9 +172,9 @@ class JP2KDecoder(Decoder):
         :return: 重建的图像块
         """
         return pywt.idwt2(coeffs, 'haar')
-    
+
     @staticmethod
-    def get_tiles_from_data(data_blocks: List[List[int]], tile_size: int=128, q_factor: int=5) -> List[np.ndarray]:
+    def get_tiles_from_data(data_blocks: List[List[int]], tile_size: int = 128, q_factor: int = 5) -> List[np.ndarray]:
         """
         从数据块还原图像块
         :param blocks: 解码后的图像块
@@ -176,24 +185,26 @@ class JP2KDecoder(Decoder):
         channels = []
         for block in data_blocks:
             # 数据拆分
-            origin_coeffs = JP2KDecoder.inverse_quantize_from_block(block, tile_size)
+            origin_coeffs = JP2KDecoder.inverse_quantize_from_block(
+                block, tile_size)
             # 反量化
             coeffs = JP2KDecoder.inverse_quantize(origin_coeffs, q_factor)
             # 反小波变换
-            single_channel = JP2KDecoder.inverse_discrete_wavelet_transform(coeffs)
+            single_channel = JP2KDecoder.inverse_discrete_wavelet_transform(
+                coeffs)
             # 组合 通道数据块 形成 3通道的图块
             channels.append(single_channel)
             if len(channels) == 3:
                 reconstruct_tiles.append(np.stack(channels, axis=2))
                 channels.clear()
         return reconstruct_tiles
-    
+
     @staticmethod
     def convertColor2RGB(image: np.ndarray) -> np.ndarray:
         return cv2.cvtColor(image, cv2.COLOR_YUV2RGB)
-    
+
     @staticmethod
-    def merge_image(tiles: List[np.ndarray], tile_size: int, image_shape: Union[List,Tuple]):
+    def merge_image(tiles: List[np.ndarray], tile_size: int, image_shape: Union[List, Tuple]):
         """
         将图像块重新组合并显示
         :param tiles: 图像块列表
@@ -208,7 +219,7 @@ class JP2KDecoder(Decoder):
         tile_h, tile_w = tile_size
         # 创建一个空白图像用于展示块
         merged_image = np.zeros((h, w, 3), dtype=np.uint8)
-        
+
         # 重新组合图像块
         idx = 0
         for x in range(0, w, tile_w):
