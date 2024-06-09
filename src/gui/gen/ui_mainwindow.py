@@ -16,10 +16,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtWidgets import (QApplication, QGraphicsView, QGridLayout, QHBoxLayout,
-    QLabel, QLineEdit, QMainWindow, QMenuBar,
-    QPushButton, QSizePolicy, QSlider, QSpacerItem,
-    QStatusBar, QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QGraphicsView, QGridLayout,
+    QHBoxLayout, QLabel, QLineEdit, QMainWindow,
+    QMenuBar, QPushButton, QSizePolicy, QSlider,
+    QSpacerItem, QStatusBar, QTabWidget, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -38,30 +39,10 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.fileLayout = QGridLayout()
         self.fileLayout.setObjectName(u"fileLayout")
-        self.encodedFileLabel = QLabel(self.otherTab)
-        self.encodedFileLabel.setObjectName(u"encodedFileLabel")
-
-        self.fileLayout.addWidget(self.encodedFileLabel, 2, 0, 1, 1)
-
-        self.selectOriginFileButton = QPushButton(self.otherTab)
-        self.selectOriginFileButton.setObjectName(u"selectOriginFileButton")
-
-        self.fileLayout.addWidget(self.selectOriginFileButton, 0, 1, 1, 1)
-
-        self.originFileLabel = QLabel(self.otherTab)
-        self.originFileLabel.setObjectName(u"originFileLabel")
-
-        self.fileLayout.addWidget(self.originFileLabel, 0, 0, 1, 1)
-
         self.decodedFileLabel = QLabel(self.otherTab)
         self.decodedFileLabel.setObjectName(u"decodedFileLabel")
 
         self.fileLayout.addWidget(self.decodedFileLabel, 4, 0, 1, 1)
-
-        self.encodedLineEdit = QLineEdit(self.otherTab)
-        self.encodedLineEdit.setObjectName(u"encodedLineEdit")
-
-        self.fileLayout.addWidget(self.encodedLineEdit, 3, 0, 1, 2)
 
         self.decodedLineEdit = QLineEdit(self.otherTab)
         self.decodedLineEdit.setObjectName(u"decodedLineEdit")
@@ -81,12 +62,40 @@ class Ui_MainWindow(object):
         self.buttonLayout.addWidget(self.decodeButton)
 
 
-        self.fileLayout.addLayout(self.buttonLayout, 6, 0, 1, 2)
+        self.fileLayout.addLayout(self.buttonLayout, 7, 0, 1, 2)
+
+        self.selectOriginFileButton = QPushButton(self.otherTab)
+        self.selectOriginFileButton.setObjectName(u"selectOriginFileButton")
+
+        self.fileLayout.addWidget(self.selectOriginFileButton, 0, 1, 1, 1)
+
+        self.encodedFileLabel = QLabel(self.otherTab)
+        self.encodedFileLabel.setObjectName(u"encodedFileLabel")
+
+        self.fileLayout.addWidget(self.encodedFileLabel, 2, 0, 1, 1)
+
+        self.encodedLineEdit = QLineEdit(self.otherTab)
+        self.encodedLineEdit.setObjectName(u"encodedLineEdit")
+
+        self.fileLayout.addWidget(self.encodedLineEdit, 3, 0, 1, 2)
+
+        self.originFileLabel = QLabel(self.otherTab)
+        self.originFileLabel.setObjectName(u"originFileLabel")
+
+        self.fileLayout.addWidget(self.originFileLabel, 0, 0, 1, 1)
 
         self.originFileLineEdit = QLineEdit(self.otherTab)
         self.originFileLineEdit.setObjectName(u"originFileLineEdit")
 
         self.fileLayout.addWidget(self.originFileLineEdit, 1, 0, 1, 2)
+
+        self.grayCheckBox = QCheckBox(self.otherTab)
+        self.grayCheckBox.setObjectName(u"grayCheckBox")
+        self.grayCheckBox.setEnabled(True)
+        self.grayCheckBox.setTabletTracking(False)
+        self.grayCheckBox.setChecked(True)
+
+        self.fileLayout.addWidget(self.grayCheckBox, 6, 0, 1, 2)
 
 
         self.verticalLayout.addLayout(self.fileLayout)
@@ -239,26 +248,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.originGraphicsView)
 
         self.imageTab.addTab(self.originTab, "")
-        self.encodedTab = QWidget()
-        self.encodedTab.setObjectName(u"encodedTab")
-        self.horizontalLayout_2 = QHBoxLayout(self.encodedTab)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.encodedGraphicsView = QGraphicsView(self.encodedTab)
-        self.encodedGraphicsView.setObjectName(u"encodedGraphicsView")
-
-        self.horizontalLayout_2.addWidget(self.encodedGraphicsView)
-
-        self.imageTab.addTab(self.encodedTab, "")
-        self.decodedTab = QWidget()
-        self.decodedTab.setObjectName(u"decodedTab")
-        self.horizontalLayout_3 = QHBoxLayout(self.decodedTab)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.decodedGraphicsView = QGraphicsView(self.decodedTab)
-        self.decodedGraphicsView.setObjectName(u"decodedGraphicsView")
-
-        self.horizontalLayout_3.addWidget(self.decodedGraphicsView)
-
-        self.imageTab.addTab(self.decodedTab, "")
         self.waveletTab = QWidget()
         self.waveletTab.setObjectName(u"waveletTab")
         self.gridLayout_2 = QGridLayout(self.waveletTab)
@@ -284,6 +273,16 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.rbGraphicsView, 1, 1, 1, 1)
 
         self.imageTab.addTab(self.waveletTab, "")
+        self.decodedTab = QWidget()
+        self.decodedTab.setObjectName(u"decodedTab")
+        self.horizontalLayout_3 = QHBoxLayout(self.decodedTab)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.decodedGraphicsView = QGraphicsView(self.decodedTab)
+        self.decodedGraphicsView.setObjectName(u"decodedGraphicsView")
+
+        self.horizontalLayout_3.addWidget(self.decodedGraphicsView)
+
+        self.imageTab.addTab(self.decodedTab, "")
         self.graphTab = QWidget()
         self.graphTab.setObjectName(u"graphTab")
         self.horizontalLayout_4 = QHBoxLayout(self.graphTab)
@@ -322,12 +321,13 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.encodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u538b\u7f29\u6587\u4ef6\u540d\uff1a", None))
-        self.selectOriginFileButton.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6e90\u56fe\u7247", None))
-        self.originFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u539f\u59cb\u6587\u4ef6\uff1a", None))
         self.decodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u89e3\u538b\u6587\u4ef6\u540d\uff1a", None))
         self.encodeButton.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u7801", None))
         self.decodeButton.setText(QCoreApplication.translate("MainWindow", u"\u89e3\u7801", None))
+        self.selectOriginFileButton.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6e90\u56fe\u7247", None))
+        self.encodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u538b\u7f29\u6587\u4ef6\u540d\uff1a", None))
+        self.originFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u539f\u59cb\u6587\u4ef6\uff1a", None))
+        self.grayCheckBox.setText(QCoreApplication.translate("MainWindow", u"\u5c0f\u6ce2\u53d8\u6362\u5c55\u793a\u7070\u5ea6\u56fe", None))
         self.settingTab.setTabText(self.settingTab.indexOf(self.otherTab), QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u8bbe\u7f6e", None))
         self.tileSizeMaxLabel.setText(QCoreApplication.translate("MainWindow", u"Max:", None))
         self.tileSizeMinLabel.setText(QCoreApplication.translate("MainWindow", u"Min:", None))
@@ -340,9 +340,8 @@ class Ui_MainWindow(object):
         self.imageSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u56fe\u7247\u5c3a\u5bf8\uff1a", None))
         self.settingTab.setTabText(self.settingTab.indexOf(self.baseTab), QCoreApplication.translate("MainWindow", u"\u538b\u7f29\u8bbe\u7f6e", None))
         self.imageTab.setTabText(self.imageTab.indexOf(self.originTab), QCoreApplication.translate("MainWindow", u"\u539f\u59cb\u56fe\u50cf", None))
-        self.imageTab.setTabText(self.imageTab.indexOf(self.encodedTab), QCoreApplication.translate("MainWindow", u"\u538b\u7f29\u56fe\u50cf", None))
-        self.imageTab.setTabText(self.imageTab.indexOf(self.decodedTab), QCoreApplication.translate("MainWindow", u"\u89e3\u538b\u56fe\u50cf", None))
         self.imageTab.setTabText(self.imageTab.indexOf(self.waveletTab), QCoreApplication.translate("MainWindow", u"\u5c0f\u6ce2\u56fe\u50cf", None))
+        self.imageTab.setTabText(self.imageTab.indexOf(self.decodedTab), QCoreApplication.translate("MainWindow", u"\u89e3\u7801\u56fe\u50cf", None))
         self.imageTab.setTabText(self.imageTab.indexOf(self.graphTab), QCoreApplication.translate("MainWindow", u"\u56fe\u8868\u5c55\u793a", None))
     # retranslateUi
 

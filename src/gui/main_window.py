@@ -42,6 +42,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # file
         self.origin_img_path = None
         self.origin_img = None
+        self.is_gray_wavelets = True
         self.encoded_img_path = None
         self.encoded_img = None
         self.decoded_img_path = None
@@ -52,44 +53,46 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def ui_init(self):
         """UI初始化"""
+        # grayCheckBox
+        self.ui.grayCheckBox.setChecked(self.is_gray_wavelets)
         # tile_size
-        # LineEdit
+        # # LineEdit
         int_validator = QtGui.QRegularExpressionValidator(self)
         int_validator.setRegularExpression(
             QtCore.QRegularExpression('[0-9]+$'))
         self.ui.tileSizeLineEdit.setValidator(int_validator)
         self.ui.tileSizeLineEdit.setText(str(self.tile_size))
-        # Slider
+        # # Slider
         self.ui.tileSizeHorizontalSlider.setRange(
             self.tile_size_range[0], self.tile_size_range[1])
         self.ui.tileSizeHorizontalSlider.setValue(int(self.tile_size))
-        # MaxLineEdit
+        # # MaxLineEdit
         self.ui.tileSizeMaxLineEdit.setValidator(int_validator)
         self.ui.tileSizeMaxLineEdit.setText(str(self.tile_size_range[1]))
-        # MinLineEdit
+        # # MinLineEdit
         self.ui.tileSizeMinLineEdit.setValidator(int_validator)
         self.ui.tileSizeMinLineEdit.setText(str(self.tile_size_range[0]))
         # q_factor
-        # LineEdit
+        # # LineEdit
         float_validator = QtGui.QRegularExpressionValidator(self)
         float_validator.setRegularExpression(
             QtCore.QRegularExpression('[0-9\.]+$'))
         self.ui.qFactorLineEdit.setValidator(float_validator)
         self.ui.qFactorLineEdit.setText(str(self.q_factor))
-        # Slider
+        # # Slider
         self.ui.qFactorHorizontalSlider.setRange(
             self.q_factor_range[0], self.q_factor_range[1])
         self.ui.qFactorHorizontalSlider.setValue(int(self.q_factor))
-        # MaxLineEdit
+        # # MaxLineEdit
         self.ui.qFactorMaxLineEdit.setValidator(float_validator)
         self.ui.qFactorMaxLineEdit.setText(str(self.q_factor_range[1]))
-        # MinLineEdit
+        # # MinLineEdit
         self.ui.qFactorMinLineEdit.setValidator(float_validator)
         self.ui.qFactorMinLineEdit.setText(str(self.q_factor_range[0]))
         # image_shape
-        # width
+        # # width
         self.ui.widthLineEdit.setDisabled(True)
-        # height
+        # # height
         self.ui.heightLineEdit.setDisabled(True)
 
     def signal_slot_init(self):
@@ -137,17 +140,31 @@ class MainWindow(QtWidgets.QMainWindow):
         print(f"{self.decoded_img_path=}")
 
     # # 设置解码文件名
+    @QtCore.Slot()
     def on_encodedLineEdit_textEdited(self):
         encoded_filename = self.ui.encodedLineEdit.text()
         self.encoded_img_path = Path(encoded_filename)
         # DEBUG_PRINT: 打印调试
         print(f"{self.encoded_img_path=}")
 
+    # # 小波灰度彩色切换
+    @QtCore.Slot()
+    def on_grayCheckBox_stateChanged(self):
+        if self.ui.grayCheckBox.isChecked():
+            self.is_gray_wavelets = True
+        else:
+            self.is_gray_wavelets = False
+
     # # 开始编码按钮
     @QtCore.Slot()
     def on_encodeButton_clicked(self):
         """解码"""
         self.origin_img = self.encoder.read(self.origin_img_path)
+        height, width = self.origin_img.shape[:2]
+        if width % self.tile_size != 0 or height % self.tile_size != 0:
+            QtWidgets.QMessageBox.critical(
+                self, "错误", f"图像大小为({width}，{height})，分块大小为{self.tile_size}，无法整除，请调整分块大小！")
+            return
         bitstream = self.encoder.encode(self.origin_img)
         self.encoder.save(self.encoded_img_path, bitstream)
         self.encode_finished.emit()  # 发送信号，显示小波图像
@@ -156,6 +173,10 @@ class MainWindow(QtWidgets.QMainWindow):
     @QtCore.Slot()
     def on_decodeButton_clicked(self):
         """解码"""
+        if not self.encoded_img_path.exists():
+            QtWidgets.QMessageBox.critical(
+                self, "错误", f"文件{self.encoded_img_path}不存在，请先进行图像编码！")
+            return
         bitstream = self.decoder.read(self.encoded_img_path)
         self.encoded_img = self.decoder.decode(bitstream)
         self.decoder.save(str(self.decoded_img_path), self.encoded_img)
@@ -255,12 +276,8 @@ class MainWindow(QtWidgets.QMainWindow):
     @QtCore.Slot()
     def origin_file_selected_triggered(self):
         """显示原始图像"""
-        # TODO：
-        # [ ]: 图像缩放显示
         # Pixmap 打开图像
         q_img = QtGui.QPixmap(str(self.origin_img_path))
-        q_rect = self.ui.originGraphicsView.geometry()
-        q_img.scaled(q_rect.size())
         if q_img is None:
             QtWidgets.QMessageBox.warning(self, "警告", "图片读取失败，请检查图片路径！")
             return
@@ -269,24 +286,80 @@ class MainWindow(QtWidgets.QMainWindow):
         # 修改显示信息
         self.ui.widthLineEdit.setText(str(width))
         self.ui.heightLineEdit.setText(str(height))
-        self.image_shape_changed.emit(width, height)  # 发送信号，修改 image_shape
         # scene 装载图像
         scene = QtWidgets.QGraphicsScene()
         scene.addPixmap(q_img)
         # view 显示 scene
         self.ui.originGraphicsView.setScene(scene)
+        self.ui.originGraphicsView.fitInView(
+            scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
         self.ui.originGraphicsView.show()
 
-    # # 解压图像
+        self.image_shape_changed.emit(width, height)  # 发送信号，修改 image_shape
+
+    # # 小波图像
+    @QtCore.Slot()
+    def encode_finished_triggered(self):
+        # TODO:
+        # [ ]: 优化小波图像显示
+        if self.is_gray_wavelets:
+            self.wavelet_imgs = self.encoder.get_gray_wavelet_image(
+                self.origin_img)
+            # options = QtGui.QImage.Format_Indexed8
+            # options = QtGui.QImage.Format_Grayscale8
+            # 效果比 QtGui.QImage.Format_Grayscale8要好
+            options = QtGui.QImage.Format_Grayscale16
+            # options = QtGui.QImage.Format_BGR888
+        else:
+            self.wavelet_imgs = self.encoder.get_wavelet_image(self.origin_img)
+            options = QtGui.QImage.Format_BGR888
+        lt_img, rt_img, lb_img, rb_img = self.wavelet_imgs
+        height, width = lt_img.shape[:2]  # cur_frame=会返回图像的高、宽与颜色通道数，截前2
+        lt_pixmap = QtGui.QPixmap.fromImage(
+            QtGui.QImage(lt_img, width, height, options))
+        rt_pixmap = QtGui.QPixmap.fromImage(
+            QtGui.QImage(rt_img, width, height, options))
+        lb_pixmap = QtGui.QPixmap.fromImage(
+            QtGui.QImage(lb_img, width, height, options))
+        rb_pixmap = QtGui.QPixmap.fromImage(
+            QtGui.QImage(rb_img, width, height, options))
+
+        # scene 装载图像
+        lt_scene = QtWidgets.QGraphicsScene()
+        lt_scene.addPixmap(lt_pixmap)
+        rt_scene = QtWidgets.QGraphicsScene()
+        rt_scene.addPixmap(rt_pixmap)
+        lb_scene = QtWidgets.QGraphicsScene()
+        lb_scene.addPixmap(lb_pixmap)
+        rb_scene = QtWidgets.QGraphicsScene()
+        rb_scene.addPixmap(rb_pixmap)
+        # view 显示 scene
+        self.ui.ltGraphicsView.setScene(lt_scene)
+        self.ui.ltGraphicsView.fitInView(
+            lt_scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
+        self.ui.rtGraphicsView.setScene(rt_scene)
+        self.ui.rtGraphicsView.fitInView(
+            rt_scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
+        self.ui.lbGraphicsView.setScene(lb_scene)
+        self.ui.lbGraphicsView.fitInView(
+            lb_scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
+        self.ui.rbGraphicsView.setScene(rb_scene)
+        self.ui.rbGraphicsView.fitInView(
+            rb_scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
+        # 显示图片
+        self.ui.ltGraphicsView.show()
+        self.ui.rtGraphicsView.show()
+        self.ui.lbGraphicsView.show()
+        self.ui.rbGraphicsView.show()
+        # 编码完成，发送通知
+        QtWidgets.QMessageBox.information(
+            self, "通知", f"编码完成！文件保存在{self.encoded_img_path}!")
+
+    # # 解码图像
     @QtCore.Slot()
     def decode_finished_triggered(self):
-        # TODO: 
-        # [ ]: Check一下tile_size能不能整除，不行的话要报错
-        # [ ]: 解压结束之后需要通知栏
         # Pixmap 打开图像
         q_img = QtGui.QPixmap(str(self.decoded_img_path))
-        q_rect = self.ui.decodedGraphicsView.geometry()
-        q_img.scaled(q_rect.size())
         if q_img is None:
             QtWidgets.QMessageBox.warning(self, "警告", "图片读取失败，请检查图片路径！")
             return
@@ -295,14 +368,12 @@ class MainWindow(QtWidgets.QMainWindow):
         scene.addPixmap(q_img)
         # view 显示 scene
         self.ui.decodedGraphicsView.setScene(scene)
+        self.ui.decodedGraphicsView.fitInView(
+            scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
         self.ui.decodedGraphicsView.show()
-
-    # # 小波图像
-    @QtCore.Slot()
-    def encode_finished_triggered(self):
-        # TODO: 
-        # [ ]: 编码结束之后需要通知栏
-        pass
+        # 解码完成，发送通知
+        QtWidgets.QMessageBox.information(
+            self, "通知", f"解码完成！文件保存在{self.decoded_img_path}!")
 
     # # 图表表示
 
