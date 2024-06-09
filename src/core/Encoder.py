@@ -67,9 +67,14 @@ class JP2KEncoder(Encoder):
         rb = np.stack([rb_0, rb_1, rb_2], axis=2)
         return lt, rt, lb, rb
 
-    def get_gray_wavelet_image(self, img: np.ndarray) -> Tuple:
+    def get_gray_wavelet_image(self, img: np.ndarray, channels: int=1) -> Tuple:
         gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         lt, (rt, lb, rb) = JP2KEncoder.discrete_wavelet_transform_2d(gray_img)
+        if channels > 1:
+            lt = np.stack([lt]*channels, axis=2)
+            rt = np.stack([rt]*channels, axis=2)
+            lb = np.stack([lb]*channels, axis=2)
+            rb = np.stack([rb]*channels, axis=2)
         return lt, rt, lb, rb
 
     @staticmethod
