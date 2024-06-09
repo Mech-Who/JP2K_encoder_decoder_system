@@ -5,7 +5,7 @@ from PySide6 import QtCore, QtWidgets, QtGui
 
 from src.gui.gen.ui_mainwindow import Ui_MainWindow
 from src.core import JP2KDecoder, JP2KEncoder
-from src.config_ import SRC_IMG_ROOT
+from src.config_ import SRC_IMG_ROOT, ENCODED_IMG_ROOT, DECODED_IMG_ROOT
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -29,17 +29,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def class_init(self):
         """类初始化"""
+        # parameter
         self.q_factor = 5.0
         self.q_factor_range = [0, 1000]
         self.tile_size = 128
         self.tile_size_range = [8, 256]
-        self.image_shape = (768, 512)
+        self.image_shape = [768, 512]
+        # file
         self.origin_img_path = None
         self.origin_img = None
         self.encoded_img_path = None
         self.encoded_img = None
         self.decoded_img_path = None
         self.decoded_img = None
+        # encoder & decoder
         self.encoder = JP2KEncoder(self.q_factor, self.tile_size)
         self.decoder = JP2KDecoder(self.q_factor, self.tile_size)
 
@@ -79,15 +82,17 @@ class MainWindow(QtWidgets.QMainWindow):
         # MinLineEdit
         self.ui.qFactorMinLineEdit.setValidator(float_validator)
         self.ui.qFactorMinLineEdit.setText(str(self.q_factor_range[0]))
+        # image_shape
+        # width
+        self.ui.widthLineEdit.setDisabled(True)
+        # height
+        self.ui.heightLineEdit.setDisabled(True)
 
     def signal_slot_init(self):
         """信号与槽初始化"""
-        # TODO: 绑定选择原文件之后显示原图像
-        self.origin_file_selected.connect(self.on_origin_file_selected_clicked)
-        # TODO: 绑定编码结束后显示小波图象
-        # self.encode_finished.connect()
-        # TODO: 绑定解码结束后显示解码图像
-        # self.decode_finished.connect()
+        self.origin_file_selected.connect(self.origin_file_selected_triggered)
+        self.encode_finished.connect(self.encode_finished_triggered)
+        self.decode_finished.connect(self.decode_finished_triggered)
 
     """槽函数部分"""
     # 文件设置
@@ -105,11 +110,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.origin_img_path = origin_path
         self.ui.originFileLineEdit.setText(self.origin_img_path.name)
 
-        self.encoded_img_path = origin_path.parent / \
+        self.encoded_img_path = ENCODED_IMG_ROOT / \
             f"encoded_{origin_path.stem}.jp2"
         self.ui.encodedLineEdit.setText(self.encoded_img_path.name)
 
-        self.decoded_img_path = origin_path.parent / \
+        self.decoded_img_path = DECODED_IMG_ROOT / \
             f"decoded_{origin_path.stem}.png"
         self.ui.decodedLineEdit.setText(self.decoded_img_path.name)
 
@@ -139,6 +144,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.encoder.save(self.encoded_img_path, bitstream)
         self.encode_finished.emit()  # 发送信号，显示小波图像
 
+    # 开始解码按钮
     @QtCore.Slot()
     def on_decodeButton_clicked(self):
         """解码"""
@@ -146,8 +152,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.encoded_img = self.decoder.decode(bitstream)
         self.decoder.save(self.encoded_img)
         self.decode_finished.emit()  # 发送信号，显示解码图像
-
-    # 开始解码按钮
 
     # 压缩设置
     # 分块大小
@@ -210,34 +214,58 @@ class MainWindow(QtWidgets.QMainWindow):
             text = self.q_factor_range[0]
         self.ui.qFactorHorizontalSlider.setMinimum(int(text))
 
-    # 图片尺寸 
-    # TODO: 展示原图片后设置
+    # 图片尺寸
+    # HINT: 似乎不需要以下两个槽函数，因为不允许用户编辑以下两个LineEdit
+    def on_widthLineEdit_textEdited(self):
+        text = self.ui.widthLineEdit.text()
+        if text == '':
+            text = 0
+        self.image_shape[0] = int(text)
+
+    def on_heightLineEdit_textEdited(self):
+        text = self.ui.heightLineEdit.text()
+        if text == '':
+            text = 0
+        self.image_shape[1] = int(text)
 
     # 图像展示
-
     # 原始图像
     @QtCore.Slot()
-    def on_origin_file_selected_triggered(self):
-        src_img = cv2.imread("2.jpg")
-        if src_img is None:
-            QtWidgets.QMessageBox.information(self, "警告", "图片读取失败，请检查图片路径！")
+    def origin_file_selected_triggered(self):
+        # Pixmap 打开图像
+        q_img = QtGui.QPixmap(str(self.origin_img_path))
+        q_rect = self.ui.originGraphicsView.geometry()
+        q_img.scaled(q_rect.size())
+        if q_img is None:
+            QtWidgets.QMessageBox.warning(self, "警告", "图片读取失败，请检查图片路径！")
             return
-        show_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
-        q_img = QtGui.QImage(
-            show_img.data, show_img.wrap_channels, QtGui.QImage.Format_RGB888)
+        # scene 装载图像
         scene = QtWidgets.QGraphicsScene()
-        self.ui.graphicsView.setScenet(scene)
-        self.ui.graphicsView.show()
-        scene.addPixmap(QtGui.QPixmap.fromImage(q_img))
+        scene.addPixmap(q_img)
+        # view 显示 scene
+        self.ui.originGraphicsView.setScene(scene)
+        self.ui.originGraphicsView.show()
 
     # 解压图像
     @QtCore.Slot()
-    def on_decode_finished_triggered(self):
-        pass
+    def decode_finished_triggered(self):
+        # Pixmap 打开图像
+        q_img = QtGui.QPixmap(str(self.decoded_img_path))
+        q_rect = self.ui.decodedGraphicsView.geometry()
+        q_img.scaled(q_rect.size())
+        if q_img is None:
+            QtWidgets.QMessageBox.warning(self, "警告", "图片读取失败，请检查图片路径！")
+            return
+        # scene 装载图像
+        scene = QtWidgets.QGraphicsScene()
+        scene.addPixmap(q_img)
+        # view 显示 scene
+        self.ui.decodedGraphicsView.setScene(scene)
+        self.ui.decodedGraphicsView.show()
 
     # 小波图像
     @QtCore.Slot()
-    def on_encode_finished_triggered(self):
+    def encode_finished_triggered(self):
         pass
 
     # 图表表示
