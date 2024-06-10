@@ -28,6 +28,14 @@ class Encoder(ABC):
         raise NotImplementedError("抽象类中不进行实现: Encoder.save()!")
 
 
+class JPEGLikeEncoder(Encoder):
+    pass
+
+
+class JPEGEncoder(Encoder):
+    pass
+
+
 class JP2KEncoder(Encoder):
     """
     JPEG2000 编码器
@@ -68,7 +76,7 @@ class JP2KEncoder(Encoder):
         t_img = np.concatenate([lt, rt], axis=1)
         b_img = np.concatenate([lb, rb], axis=1)
         out_img = np.concatenate([t_img, b_img], axis=0)
-        out_img = utils.norm(out_img, base=255) # 标准化到[0,255]
+        out_img = utils.norm(out_img, base=255)  # 标准化到[0,255]
         out_img = out_img.astype(np.uint8)
         return out_img
 

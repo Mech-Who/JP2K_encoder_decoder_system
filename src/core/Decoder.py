@@ -26,6 +26,14 @@ class Decoder(ABC):
         raise NotImplementedError("抽象类中不进行实现: Decoder.save()!")
 
 
+class JPEGLikeDecoder(Decoder):
+    pass
+
+
+class JPEGDecoder(Decoder):
+    pass
+
+
 class JP2KDecoder(Decoder):
     """
     JPEG2000 解码器
