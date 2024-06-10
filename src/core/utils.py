@@ -63,10 +63,10 @@ def get_correct_size(size: int) -> tuple:
 
 def calculate_bpp(img):
     # 计算像素总数
-    total_pixels = image.size
+    total_pixels = img.size
 
     # 计算图像的总位数
-    total_bits = total_pixels * image.itemsize * 8
+    total_bits = total_pixels * img.itemsize * 8
 
     # 计算bpp
     bpp = total_bits / total_pixels

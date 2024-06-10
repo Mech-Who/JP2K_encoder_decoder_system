@@ -2,16 +2,16 @@
 
 > 参考资料:
 >
-> - https://github.com/zhangyilang/jpeg2000/blob/master/code/compress.py
-> - https://github.com/mengrang/jp2-python/tree/master/tests
-> - https://github.com/pydicom/pylibjpeg-openjpeg
-> - https://www.cnblogs.com/huty/p/8519045.html
+> - [github: zhangyilang/jpeg2000](https://github.com/zhangyilang/jpeg2000/blob/master/code/compress.py)
+> - [github: mengrang/jp2-python](https://github.com/mengrang/jp2-python/tree/master/tests)
+> - [github: pydicom/pylibjpeg-openjpeg](https://github.com/pydicom/pylibjpeg-openjpeg)
+> - [JPEG 与 JPEG2000](https://www.cnblogs.com/huty/p/8519045.html)
 >
 > 数据集：
 >
-> - kodak24：https://r0k.us/graphics/kodak/
+> - kodak24：[kodak24 数据集下载地址](https://r0k.us/graphics/kodak/)
 
-### 一、开发环境
+## 一、开发环境
 
 运行 ipynb 文件所需的依赖包：
 
@@ -29,7 +29,7 @@
 
 - pyside6
 
-### 二、主要内容
+## 二、主要内容
 
 - 编码过程
   - 色彩空间变换
@@ -50,7 +50,7 @@
 
 ## 三、GUI 设计
 
-> 参考：https://blog.csdn.net/qq_45062768/article/details/132357617
+> 参考：[PySide6 基础教程](https://blog.csdn.net/qq_45062768/article/details/132357617)
 
 使用 PySide6 来构建可视化界面。
 
