@@ -65,17 +65,12 @@ class JP2KEncoder(Encoder):
         rt = np.stack([rt_0, rt_1, rt_2], axis=2)
         lb = np.stack([lb_0, lb_1, lb_2], axis=2)
         rb = np.stack([rb_0, rb_1, rb_2], axis=2)
-        return lt, rt, lb, rb
-
-    def get_gray_wavelet_image(self, img: np.ndarray, channels: int=1) -> Tuple:
-        gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        lt, (rt, lb, rb) = JP2KEncoder.discrete_wavelet_transform_2d(gray_img)
-        if channels > 1:
-            lt = np.stack([lt]*channels, axis=2)
-            rt = np.stack([rt]*channels, axis=2)
-            lb = np.stack([lb]*channels, axis=2)
-            rb = np.stack([rb]*channels, axis=2)
-        return lt, rt, lb, rb
+        t_img = np.concatenate([lt, rt], axis=1)
+        b_img = np.concatenate([lb, rb], axis=1)
+        out_img = np.concatenate([t_img, b_img], axis=0)
+        out_img = utils.norm(out_img, base=255) # 标准化到[0,255]
+        out_img = out_img.astype(np.uint8)
+        return out_img
 
     @staticmethod
     def tile_np_image(image, tile_size) -> List[np.ndarray]:
