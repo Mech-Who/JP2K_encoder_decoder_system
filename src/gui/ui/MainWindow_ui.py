@@ -338,7 +338,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.settingTab.setCurrentIndex(0)
-        self.imageTab.setCurrentIndex(1)
+        self.imageTab.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

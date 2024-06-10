@@ -332,7 +332,7 @@
     <item row="0" column="1">
      <widget class="QTabWidget" name="imageTab">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="originTab">
        <attribute name="title">
