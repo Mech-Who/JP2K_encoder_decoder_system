@@ -33,7 +33,16 @@ def turn2pair(one) -> tuple:
     return (one, one)
 
 
-def get_correct_size(size):
+def norm(src, base=1) -> np.ndarray:
+    out = np.zeros_like(src)
+    for i in range(src.shape[2]):
+        max_v = np.max(src[:, :, i])
+        min_v = np.min(src[:, :, i])
+        out[:, :, i] = (src[:, :, i] - min_v)/(max_v - min_v) * base
+    return out
+
+
+def get_correct_size(size: int) -> tuple:
     """获得简化值和计量单位"""
     unit = "B"
     current_size = size
@@ -50,6 +59,19 @@ def get_correct_size(size):
         current_size /= 1024
         unit = "TB"
     return current_size, unit
+
+
+def calculate_bpp(img):
+    # 计算像素总数
+    total_pixels = image.size
+
+    # 计算图像的总位数
+    total_bits = total_pixels * image.itemsize * 8
+
+    # 计算bpp
+    bpp = total_bits / total_pixels
+
+    return bpp
 
 
 def psnr(old: str, new: str):
