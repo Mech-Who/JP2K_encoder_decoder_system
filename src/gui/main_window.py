@@ -1,11 +1,13 @@
 from pathlib import Path
 
 import cv2
+import numpy as np
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from src.gui.gen.ui_mainwindow import Ui_MainWindow
 from src.core import JP2KDecoder, JP2KEncoder
-from src.config_ import SRC_IMG_ROOT, ENCODED_IMG_ROOT, DECODED_IMG_ROOT
+from src.config_ import SRC_IMG_ROOT, WAVE_IMG_ROOT, ENCODED_IMG_ROOT, DECODED_IMG_ROOT
+import src.core.utils as utils
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -36,7 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # parameter
         self.q_factor = 5.0
         self.q_factor_range = [0, 1000]
-        self.tile_size = 128
+        self.tile_size = 120
         self.tile_size_range = [8, 256]
         self.image_shape = [768, 512]
         # file
@@ -50,6 +52,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # encoder & decoder
         self.encoder = JP2KEncoder(self.q_factor, self.tile_size)
         self.decoder = JP2KDecoder(self.q_factor, self.tile_size)
+        # other matric
+        self.psnr = None
 
     def ui_init(self):
         """UI初始化"""
@@ -94,6 +98,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.widthLineEdit.setDisabled(True)
         # # height
         self.ui.heightLineEdit.setDisabled(True)
+        # image show
+        self.ui.originGraphicsView
+        self.ui.waveGraphicsView
+        # self.ui.ltGraphicsView
+        # self.ui.rtGraphicsView
+        # self.ui.lbGraphicsView
+        # self.ui.rbGraphicsView
+        self.ui.decodedGraphicsView
 
     def signal_slot_init(self):
         """信号与槽初始化"""
@@ -118,34 +130,43 @@ class MainWindow(QtWidgets.QMainWindow):
                                                             filter="图片文件(*.jpg *.gif *.png)",
                                                             options=QtWidgets.QFileDialog.ReadOnly)
         origin_path = Path(filename).absolute()
+        if not origin_path.exists():
+            return
         self.origin_img_path = origin_path
         self.ui.originFileLineEdit.setText(self.origin_img_path.name)
+        self.set_file_size_label(self.origin_img_path,
+                                 self.ui.originSizeNumberLabel)
 
         self.encoded_img_path = ENCODED_IMG_ROOT / \
             f"encoded_{origin_path.stem}.jp2"
         self.ui.encodedLineEdit.setText(self.encoded_img_path.name)
+        # self.set_file_size_label(
+        #     self.encoded_img_path, self.ui.encodedSizeNumberLabel)
 
         self.decoded_img_path = DECODED_IMG_ROOT / \
             f"decoded_{origin_path.stem}.png"
         self.ui.decodedLineEdit.setText(self.decoded_img_path.name)
+        # self.set_file_size_label(
+        #     self.decoded_img_path, self.ui.decodedSizeNumberLabel)
 
         self.origin_file_selected.emit()  # 发送信号，显示源图像
-
-    # # 设置编码文件名
-    @QtCore.Slot()
-    def on_decodedLineEdit_textEdited(self):
-        decoded_filename = self.ui.decodedLineEdit.text()
-        self.decoded_img_path = Path(decoded_filename)
-        # DEBUG_PRINT: 打印调试
-        print(f"{self.decoded_img_path=}")
 
     # # 设置解码文件名
     @QtCore.Slot()
     def on_encodedLineEdit_textEdited(self):
         encoded_filename = self.ui.encodedLineEdit.text()
         self.encoded_img_path = Path(encoded_filename)
-        # DEBUG_PRINT: 打印调试
-        print(f"{self.encoded_img_path=}")
+        self.set_file_size_label(
+            self.encoded_img_path, self.ui.encodedSizeNumberLabel)
+
+    # # 设置编码文件名
+
+    @QtCore.Slot()
+    def on_decodedLineEdit_textEdited(self):
+        decoded_filename = self.ui.decodedLineEdit.text()
+        self.decoded_img_path = Path(decoded_filename)
+        self.set_file_size_label(
+            self.decoded_img_path, self.ui.decodedSizeNumberLabel)
 
     # # 小波灰度彩色切换
     @QtCore.Slot()
@@ -158,28 +179,50 @@ class MainWindow(QtWidgets.QMainWindow):
     # # 开始编码按钮
     @QtCore.Slot()
     def on_encodeButton_clicked(self):
-        """解码"""
+        """编码"""
+        # 读取图像文件
         self.origin_img = self.encoder.read(self.origin_img_path)
+
+        # 异常处理
         height, width = self.origin_img.shape[:2]
         if width % self.tile_size != 0 or height % self.tile_size != 0:
             QtWidgets.QMessageBox.critical(
                 self, "错误", f"图像大小为({width}，{height})，分块大小为{self.tile_size}，无法整除，请调整分块大小！")
             return
+
+        # 编码
         bitstream = self.encoder.encode(self.origin_img)
         self.encoder.save(self.encoded_img_path, bitstream)
+
+        # 显示解码图片大小
+        self.set_file_size_label(
+            self.encoded_img_path, self.ui.encodedSizeNumberLabel)
+
         self.encode_finished.emit()  # 发送信号，显示小波图像
 
     # # 开始解码按钮
     @QtCore.Slot()
     def on_decodeButton_clicked(self):
         """解码"""
+        # 异常处理
         if not self.encoded_img_path.exists():
             QtWidgets.QMessageBox.critical(
                 self, "错误", f"文件{self.encoded_img_path}不存在，请先进行图像编码！")
             return
+
+        # 解码
         bitstream = self.decoder.read(self.encoded_img_path)
         self.encoded_img = self.decoder.decode(bitstream)
         self.decoder.save(str(self.decoded_img_path), self.encoded_img)
+
+        # 显示解码图片大小
+        self.set_file_size_label(
+            self.decoded_img_path, self.ui.decodedSizeNumberLabel)
+
+        # 计算psnr并显示
+        self.psnr = utils.psnr(self.origin_img_path, self.decoded_img_path)
+        self.ui.PSNRValueLabel.setText(str(self.psnr))
+
         self.decode_finished.emit()  # 发送信号，显示解码图像
 
     # 压缩设置
@@ -300,63 +343,41 @@ class MainWindow(QtWidgets.QMainWindow):
     # # 小波图像
     @QtCore.Slot()
     def encode_finished_triggered(self):
-        # TODO:
-        # [ ]: 优化小波图像显示
+        wave_img = self.encoder.get_wavelet_image(
+            cv2.imread(str(self.origin_img_path)))
+        options = QtGui.QImage.Format_RGB888
+
         if self.is_gray_wavelets:
-            self.wavelet_imgs = self.encoder.get_gray_wavelet_image(
-                self.origin_img)
-            # options = QtGui.QImage.Format_Indexed8
-            # options = QtGui.QImage.Format_Grayscale8
-            # 效果比 QtGui.QImage.Format_Grayscale8要好
-            options = QtGui.QImage.Format_Grayscale16
-            # options = QtGui.QImage.Format_BGR888
-        else:
-            self.wavelet_imgs = self.encoder.get_wavelet_image(self.origin_img)
-            options = QtGui.QImage.Format_BGR888
-        lt_img, rt_img, lb_img, rb_img = self.wavelet_imgs
-        height, width = lt_img.shape[:2]  # cur_frame=会返回图像的高、宽与颜色通道数，截前2
-        lt_pixmap = QtGui.QPixmap.fromImage(
-            QtGui.QImage(lt_img, width, height, options))
-        rt_pixmap = QtGui.QPixmap.fromImage(
-            QtGui.QImage(rt_img, width, height, options))
-        lb_pixmap = QtGui.QPixmap.fromImage(
-            QtGui.QImage(lb_img, width, height, options))
-        rb_pixmap = QtGui.QPixmap.fromImage(
-            QtGui.QImage(rb_img, width, height, options))
+            wave_img = cv2.cvtColor(wave_img, cv2.COLOR_RGB2GRAY)
+            options = QtGui.QImage.Format_Grayscale8
+
+        # # 方案一：保存小波图像然后读取显示
+        # self.wave_img_path = WAVE_IMG_ROOT / \
+        #     f"wave_{self.origin_img_path.stem}.png"
+        # self.wavelet_img = wave_img
+        # cv2.imwrite(self.wave_img_path, self.wavelet_img)
+        # wave_pixmap = QtGui.QPixmap(str(self.wave_img_path))
+
+        # 方案二：直接处理显示，不保存
+        wave_img = QtGui.QImage(
+            wave_img.data, wave_img.shape[1], wave_img.shape[0], options)
+        wave_pixmap = QtGui.QPixmap.fromImage(wave_img)
 
         # scene 装载图像
-        lt_scene = QtWidgets.QGraphicsScene()
-        lt_scene.addPixmap(lt_pixmap)
-        rt_scene = QtWidgets.QGraphicsScene()
-        rt_scene.addPixmap(rt_pixmap)
-        lb_scene = QtWidgets.QGraphicsScene()
-        lb_scene.addPixmap(lb_pixmap)
-        rb_scene = QtWidgets.QGraphicsScene()
-        rb_scene.addPixmap(rb_pixmap)
+        wave_scene = QtWidgets.QGraphicsScene()
+        wave_scene.addPixmap(wave_pixmap)
         # view 显示 scene
-        self.ui.ltGraphicsView.setScene(lt_scene)
-        self.ui.ltGraphicsView.fitInView(
-            lt_scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
-        self.ui.rtGraphicsView.setScene(rt_scene)
-        self.ui.rtGraphicsView.fitInView(
-            rt_scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
-        self.ui.lbGraphicsView.setScene(lb_scene)
-        self.ui.lbGraphicsView.fitInView(
-            lb_scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
-        self.ui.rbGraphicsView.setScene(rb_scene)
-        self.ui.rbGraphicsView.fitInView(
-            rb_scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
-        # 显示图片
-        self.ui.ltGraphicsView.show()
-        self.ui.rtGraphicsView.show()
-        self.ui.lbGraphicsView.show()
-        self.ui.rbGraphicsView.show()
+        self.ui.waveGraphicsView.setScene(wave_scene)
+        self.ui.waveGraphicsView.fitInView(
+            wave_scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
+        self.ui.waveGraphicsView.show()
+
         # 编码完成，发送通知
         QtWidgets.QMessageBox.information(
             self, "通知", f"编码完成！文件保存在{self.encoded_img_path}!")
 
     # # 解码图像
-    @QtCore.Slot()
+    @ QtCore.Slot()
     def decode_finished_triggered(self):
         # Pixmap 打开图像
         q_img = QtGui.QPixmap(str(self.decoded_img_path))
@@ -379,24 +400,29 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # 其他槽函数
     # # 修改 tile_size
-    @QtCore.Slot(int)
+    @ QtCore.Slot(int)
     def modify_tile_size(self, tile_size):
         self.tile_size = tile_size
         self.encoder.tile_size = tile_size
         self.decoder.tile_size = tile_size
 
     # # 修改 q_factor
-    @QtCore.Slot(float)
+    @ QtCore.Slot(float)
     def modify_q_factor(self, q_factor):
         self.q_factor = q_factor
         self.encoder.q_factor = q_factor
         self.decoder.q_factor = q_factor
 
     # # 修改 image_shape
-    @QtCore.Slot(int, int)
+    @ QtCore.Slot(int, int)
     def modify_image_shape(self, width, height):
         self.iamge_shape = [width, height]
         # self.encoder.image_shape = [height, width]
         # self.decoder.image_shape = [height, width]
         self.encoder.image_shape = [width, height]
         self.decoder.image_shape = [width, height]
+
+    def set_file_size_label(self, path: Path, label: QtWidgets.QLabel):
+        size = path.stat().st_size
+        value, unit = utils.get_correct_size(size)
+        label.setText(f"{value:.2f} {unit}")

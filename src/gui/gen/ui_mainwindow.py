@@ -39,15 +39,55 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.fileLayout = QGridLayout()
         self.fileLayout.setObjectName(u"fileLayout")
-        self.decodedFileLabel = QLabel(self.otherTab)
-        self.decodedFileLabel.setObjectName(u"decodedFileLabel")
+        self.originSizeLabel = QLabel(self.otherTab)
+        self.originSizeLabel.setObjectName(u"originSizeLabel")
 
-        self.fileLayout.addWidget(self.decodedFileLabel, 4, 0, 1, 1)
+        self.fileLayout.addWidget(self.originSizeLabel, 2, 0, 1, 1)
 
         self.decodedLineEdit = QLineEdit(self.otherTab)
         self.decodedLineEdit.setObjectName(u"decodedLineEdit")
 
-        self.fileLayout.addWidget(self.decodedLineEdit, 5, 0, 1, 2)
+        self.fileLayout.addWidget(self.decodedLineEdit, 7, 0, 1, 2)
+
+        self.decodedSizeLabel = QLabel(self.otherTab)
+        self.decodedSizeLabel.setObjectName(u"decodedSizeLabel")
+
+        self.fileLayout.addWidget(self.decodedSizeLabel, 8, 0, 1, 1)
+
+        self.decodedFileLabel = QLabel(self.otherTab)
+        self.decodedFileLabel.setObjectName(u"decodedFileLabel")
+
+        self.fileLayout.addWidget(self.decodedFileLabel, 6, 0, 1, 1)
+
+        self.selectOriginFileButton = QPushButton(self.otherTab)
+        self.selectOriginFileButton.setObjectName(u"selectOriginFileButton")
+
+        self.fileLayout.addWidget(self.selectOriginFileButton, 0, 1, 1, 1)
+
+        self.encodedLineEdit = QLineEdit(self.otherTab)
+        self.encodedLineEdit.setObjectName(u"encodedLineEdit")
+
+        self.fileLayout.addWidget(self.encodedLineEdit, 4, 0, 1, 2)
+
+        self.encodedFileLabel = QLabel(self.otherTab)
+        self.encodedFileLabel.setObjectName(u"encodedFileLabel")
+
+        self.fileLayout.addWidget(self.encodedFileLabel, 3, 0, 1, 1)
+
+        self.originSizeNumberLabel = QLabel(self.otherTab)
+        self.originSizeNumberLabel.setObjectName(u"originSizeNumberLabel")
+
+        self.fileLayout.addWidget(self.originSizeNumberLabel, 2, 1, 1, 1)
+
+        self.encodedSizeLabel = QLabel(self.otherTab)
+        self.encodedSizeLabel.setObjectName(u"encodedSizeLabel")
+
+        self.fileLayout.addWidget(self.encodedSizeLabel, 5, 0, 1, 1)
+
+        self.decodedSizeNumberLabel = QLabel(self.otherTab)
+        self.decodedSizeNumberLabel.setObjectName(u"decodedSizeNumberLabel")
+
+        self.fileLayout.addWidget(self.decodedSizeNumberLabel, 8, 1, 1, 1)
 
         self.buttonLayout = QHBoxLayout()
         self.buttonLayout.setObjectName(u"buttonLayout")
@@ -62,32 +102,17 @@ class Ui_MainWindow(object):
         self.buttonLayout.addWidget(self.decodeButton)
 
 
-        self.fileLayout.addLayout(self.buttonLayout, 7, 0, 1, 2)
+        self.fileLayout.addLayout(self.buttonLayout, 10, 0, 1, 2)
 
-        self.selectOriginFileButton = QPushButton(self.otherTab)
-        self.selectOriginFileButton.setObjectName(u"selectOriginFileButton")
+        self.encodedSizeNumberLabel = QLabel(self.otherTab)
+        self.encodedSizeNumberLabel.setObjectName(u"encodedSizeNumberLabel")
 
-        self.fileLayout.addWidget(self.selectOriginFileButton, 0, 1, 1, 1)
-
-        self.encodedFileLabel = QLabel(self.otherTab)
-        self.encodedFileLabel.setObjectName(u"encodedFileLabel")
-
-        self.fileLayout.addWidget(self.encodedFileLabel, 2, 0, 1, 1)
-
-        self.encodedLineEdit = QLineEdit(self.otherTab)
-        self.encodedLineEdit.setObjectName(u"encodedLineEdit")
-
-        self.fileLayout.addWidget(self.encodedLineEdit, 3, 0, 1, 2)
+        self.fileLayout.addWidget(self.encodedSizeNumberLabel, 5, 1, 1, 1)
 
         self.originFileLabel = QLabel(self.otherTab)
         self.originFileLabel.setObjectName(u"originFileLabel")
 
         self.fileLayout.addWidget(self.originFileLabel, 0, 0, 1, 1)
-
-        self.originFileLineEdit = QLineEdit(self.otherTab)
-        self.originFileLineEdit.setObjectName(u"originFileLineEdit")
-
-        self.fileLayout.addWidget(self.originFileLineEdit, 1, 0, 1, 2)
 
         self.grayCheckBox = QCheckBox(self.otherTab)
         self.grayCheckBox.setObjectName(u"grayCheckBox")
@@ -95,7 +120,22 @@ class Ui_MainWindow(object):
         self.grayCheckBox.setTabletTracking(False)
         self.grayCheckBox.setChecked(True)
 
-        self.fileLayout.addWidget(self.grayCheckBox, 6, 0, 1, 2)
+        self.fileLayout.addWidget(self.grayCheckBox, 9, 0, 1, 2)
+
+        self.originFileLineEdit = QLineEdit(self.otherTab)
+        self.originFileLineEdit.setObjectName(u"originFileLineEdit")
+
+        self.fileLayout.addWidget(self.originFileLineEdit, 1, 0, 1, 2)
+
+        self.PSNRLabel = QLabel(self.otherTab)
+        self.PSNRLabel.setObjectName(u"PSNRLabel")
+
+        self.fileLayout.addWidget(self.PSNRLabel, 11, 0, 1, 1)
+
+        self.PSNRValueLabel = QLabel(self.otherTab)
+        self.PSNRValueLabel.setObjectName(u"PSNRValueLabel")
+
+        self.fileLayout.addWidget(self.PSNRValueLabel, 11, 1, 1, 1)
 
 
         self.verticalLayout.addLayout(self.fileLayout)
@@ -252,25 +292,10 @@ class Ui_MainWindow(object):
         self.waveletTab.setObjectName(u"waveletTab")
         self.gridLayout_2 = QGridLayout(self.waveletTab)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.ltGraphicsView = QGraphicsView(self.waveletTab)
-        self.ltGraphicsView.setObjectName(u"ltGraphicsView")
+        self.waveGraphicsView = QGraphicsView(self.waveletTab)
+        self.waveGraphicsView.setObjectName(u"waveGraphicsView")
 
-        self.gridLayout_2.addWidget(self.ltGraphicsView, 0, 0, 1, 1)
-
-        self.rtGraphicsView = QGraphicsView(self.waveletTab)
-        self.rtGraphicsView.setObjectName(u"rtGraphicsView")
-
-        self.gridLayout_2.addWidget(self.rtGraphicsView, 0, 1, 1, 1)
-
-        self.lbGraphicsView = QGraphicsView(self.waveletTab)
-        self.lbGraphicsView.setObjectName(u"lbGraphicsView")
-
-        self.gridLayout_2.addWidget(self.lbGraphicsView, 1, 0, 1, 1)
-
-        self.rbGraphicsView = QGraphicsView(self.waveletTab)
-        self.rbGraphicsView.setObjectName(u"rbGraphicsView")
-
-        self.gridLayout_2.addWidget(self.rbGraphicsView, 1, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.waveGraphicsView, 0, 0, 1, 1)
 
         self.imageTab.addTab(self.waveletTab, "")
         self.decodedTab = QWidget()
@@ -313,7 +338,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.settingTab.setCurrentIndex(0)
-        self.imageTab.setCurrentIndex(0)
+        self.imageTab.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -321,13 +346,21 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.decodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u89e3\u538b\u6587\u4ef6\u540d\uff1a", None))
+        self.originSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u5927\u5c0f\uff1a", None))
+        self.decodedSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u5927\u5c0f\uff1a", None))
+        self.decodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u89e3\u7801\u6587\u4ef6\u540d\uff1a", None))
+        self.selectOriginFileButton.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6e90\u56fe\u7247", None))
+        self.encodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u7801\u6587\u4ef6\u540d\uff1a", None))
+        self.originSizeNumberLabel.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.encodedSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u5927\u5c0f\uff1a", None))
+        self.decodedSizeNumberLabel.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.encodeButton.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u7801", None))
         self.decodeButton.setText(QCoreApplication.translate("MainWindow", u"\u89e3\u7801", None))
-        self.selectOriginFileButton.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6e90\u56fe\u7247", None))
-        self.encodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u538b\u7f29\u6587\u4ef6\u540d\uff1a", None))
+        self.encodedSizeNumberLabel.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.originFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u539f\u59cb\u6587\u4ef6\uff1a", None))
         self.grayCheckBox.setText(QCoreApplication.translate("MainWindow", u"\u5c0f\u6ce2\u53d8\u6362\u5c55\u793a\u7070\u5ea6\u56fe", None))
+        self.PSNRLabel.setText(QCoreApplication.translate("MainWindow", u"PSNR:", None))
+        self.PSNRValueLabel.setText("")
         self.settingTab.setTabText(self.settingTab.indexOf(self.otherTab), QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u8bbe\u7f6e", None))
         self.tileSizeMaxLabel.setText(QCoreApplication.translate("MainWindow", u"Max:", None))
         self.tileSizeMinLabel.setText(QCoreApplication.translate("MainWindow", u"Min:", None))
