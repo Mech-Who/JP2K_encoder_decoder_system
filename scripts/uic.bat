@@ -1,7 +1,8 @@
 @echo off
 :: rem also declare the comments
 rem directory where command lives
-set COMMAND_ROOT=C:\UserData\Environment\Tools\anaconda_data\envs\ic\Lib\site-packages\PySide6
+@REM set COMMAND_ROOT=C:\UserData\Environment\Tools\anaconda_data\envs\ic\Lib\site-packages\PySide6
+set COMMAND_ROOT=C:\Users\Dell\.conda\envs\ic\Lib\site-packages\PySide6
 
 
 :: %1 ui file to use
@@ -28,7 +29,7 @@ set gen_file=%2
 :command
 :: use the command below if configured the PATH variable
 :: uic %1 -g python -o %2
-%COMMAND_ROOT%\uic %ui_file% -g python -o %gen_file%
+%COMMAND_ROOT%/uic %ui_file% -g python -o %gen_file%
 
 :quit
 echo program finished!

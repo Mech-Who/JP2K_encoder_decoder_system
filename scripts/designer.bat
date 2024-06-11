@@ -10,24 +10,21 @@ if "%1"=="" goto input
 if not "%1"=="" goto normal
 
 :input
-set /p qrc_file=Please input the "qrc" file to use: 
-set /p gen_file=Please input filename of the file to generate: 
+set /p ui_file=Please input the "qrc" file to use: 
 goto command
 
 :usage
-echo usage:
-echo arg1 - qrc file's path
-echo arg2 - file path to generate
+echo Usage:
+echo arg1 - ui file's path
 goto quit
 
 :normal
-set qrc_file=%1
-set gen_file=%2
+set ui_file=%1
 
 :: %1 is the filename of "qrc" file
 :: %2 is the filename to generate
 :command
-%COMMAND_ROOT%rcc -g python %qrc_file% -o %gen_file%
+start %COMMAND_ROOT%\designer %ui_file%
 
 :quit
 echo Program finished!
