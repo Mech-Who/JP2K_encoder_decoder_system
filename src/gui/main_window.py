@@ -138,7 +138,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                  self.ui.originSizeNumberLabel)
 
         self.encoded_img_path = ENCODED_IMG_ROOT / \
-            f"encoded_{origin_path.stem}.jp2"
+            f"encoded_{origin_path.stem}.myjp"
         self.ui.encodedLineEdit.setText(self.encoded_img_path.name)
         # self.set_file_size_label(
         #     self.encoded_img_path, self.ui.encodedSizeNumberLabel)

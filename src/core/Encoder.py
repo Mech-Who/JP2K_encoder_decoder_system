@@ -1,3 +1,4 @@
+import os
 import heapq
 import struct
 from pathlib import Path
@@ -59,7 +60,11 @@ class JP2KEncoder(Encoder):
         return cv2.imread(img_path)
 
     def save(self, save_path: str, bitstream: ByteString) -> None:
-        with open(save_path, 'wb') as f:
+        save_path = Path(save_path)
+        # 创建文件
+        if not save_path.exists():
+            save_path.touch()
+        with open(str(save_path), 'wb') as f:
             f.write(bitstream)
 
     def get_wavelet_image(self, img: np.ndarray) -> Tuple:
