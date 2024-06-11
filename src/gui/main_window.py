@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import cv2
@@ -130,12 +131,16 @@ class MainWindow(QtWidgets.QMainWindow):
                                                             filter="图片文件(*.jpg *.gif *.png)",
                                                             options=QtWidgets.QFileDialog.ReadOnly)
         origin_path = Path(filename).absolute()
-        if not origin_path.exists():
+        if not origin_path.exists() or origin_path.is_dir():
             return
         self.origin_img_path = origin_path
         self.ui.originFileLineEdit.setText(self.origin_img_path.name)
         self.set_file_size_label(self.origin_img_path,
                                  self.ui.originSizeNumberLabel)
+        img = cv2.imread(str(self.origin_img_path))
+        file_size = sys.getsizeof(img)
+        value, unit = utils.get_correct_size(file_size)
+        self.ui.dataSizeNumberLabel.setText(f"{value:.2f} {unit}")
 
         self.encoded_img_path = ENCODED_IMG_ROOT / \
             f"encoded_{origin_path.stem}.myjp"

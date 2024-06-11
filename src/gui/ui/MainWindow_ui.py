@@ -42,52 +42,17 @@ class Ui_MainWindow(object):
         self.originSizeLabel = QLabel(self.otherTab)
         self.originSizeLabel.setObjectName(u"originSizeLabel")
 
-        self.fileLayout.addWidget(self.originSizeLabel, 2, 0, 1, 1)
-
-        self.decodedLineEdit = QLineEdit(self.otherTab)
-        self.decodedLineEdit.setObjectName(u"decodedLineEdit")
-
-        self.fileLayout.addWidget(self.decodedLineEdit, 7, 0, 1, 2)
-
-        self.decodedSizeLabel = QLabel(self.otherTab)
-        self.decodedSizeLabel.setObjectName(u"decodedSizeLabel")
-
-        self.fileLayout.addWidget(self.decodedSizeLabel, 8, 0, 1, 1)
-
-        self.decodedFileLabel = QLabel(self.otherTab)
-        self.decodedFileLabel.setObjectName(u"decodedFileLabel")
-
-        self.fileLayout.addWidget(self.decodedFileLabel, 6, 0, 1, 1)
-
-        self.selectOriginFileButton = QPushButton(self.otherTab)
-        self.selectOriginFileButton.setObjectName(u"selectOriginFileButton")
-
-        self.fileLayout.addWidget(self.selectOriginFileButton, 0, 1, 1, 1)
-
-        self.encodedLineEdit = QLineEdit(self.otherTab)
-        self.encodedLineEdit.setObjectName(u"encodedLineEdit")
-
-        self.fileLayout.addWidget(self.encodedLineEdit, 4, 0, 1, 2)
-
-        self.encodedFileLabel = QLabel(self.otherTab)
-        self.encodedFileLabel.setObjectName(u"encodedFileLabel")
-
-        self.fileLayout.addWidget(self.encodedFileLabel, 3, 0, 1, 1)
+        self.fileLayout.addWidget(self.originSizeLabel, 3, 0, 1, 1)
 
         self.originSizeNumberLabel = QLabel(self.otherTab)
         self.originSizeNumberLabel.setObjectName(u"originSizeNumberLabel")
 
-        self.fileLayout.addWidget(self.originSizeNumberLabel, 2, 1, 1, 1)
-
-        self.encodedSizeLabel = QLabel(self.otherTab)
-        self.encodedSizeLabel.setObjectName(u"encodedSizeLabel")
-
-        self.fileLayout.addWidget(self.encodedSizeLabel, 5, 0, 1, 1)
+        self.fileLayout.addWidget(self.originSizeNumberLabel, 3, 1, 1, 1)
 
         self.decodedSizeNumberLabel = QLabel(self.otherTab)
         self.decodedSizeNumberLabel.setObjectName(u"decodedSizeNumberLabel")
 
-        self.fileLayout.addWidget(self.decodedSizeNumberLabel, 8, 1, 1, 1)
+        self.fileLayout.addWidget(self.decodedSizeNumberLabel, 9, 1, 1, 1)
 
         self.buttonLayout = QHBoxLayout()
         self.buttonLayout.setObjectName(u"buttonLayout")
@@ -102,17 +67,32 @@ class Ui_MainWindow(object):
         self.buttonLayout.addWidget(self.decodeButton)
 
 
-        self.fileLayout.addLayout(self.buttonLayout, 10, 0, 1, 2)
+        self.fileLayout.addLayout(self.buttonLayout, 11, 0, 1, 2)
 
-        self.encodedSizeNumberLabel = QLabel(self.otherTab)
-        self.encodedSizeNumberLabel.setObjectName(u"encodedSizeNumberLabel")
+        self.PSNRValueLabel = QLabel(self.otherTab)
+        self.PSNRValueLabel.setObjectName(u"PSNRValueLabel")
 
-        self.fileLayout.addWidget(self.encodedSizeNumberLabel, 5, 1, 1, 1)
+        self.fileLayout.addWidget(self.PSNRValueLabel, 12, 1, 1, 1)
+
+        self.decodedSizeLabel = QLabel(self.otherTab)
+        self.decodedSizeLabel.setObjectName(u"decodedSizeLabel")
+
+        self.fileLayout.addWidget(self.decodedSizeLabel, 9, 0, 1, 1)
+
+        self.decodedLineEdit = QLineEdit(self.otherTab)
+        self.decodedLineEdit.setObjectName(u"decodedLineEdit")
+
+        self.fileLayout.addWidget(self.decodedLineEdit, 8, 0, 1, 2)
+
+        self.originFileLineEdit = QLineEdit(self.otherTab)
+        self.originFileLineEdit.setObjectName(u"originFileLineEdit")
+
+        self.fileLayout.addWidget(self.originFileLineEdit, 2, 0, 1, 2)
 
         self.originFileLabel = QLabel(self.otherTab)
         self.originFileLabel.setObjectName(u"originFileLabel")
 
-        self.fileLayout.addWidget(self.originFileLabel, 0, 0, 1, 1)
+        self.fileLayout.addWidget(self.originFileLabel, 1, 0, 1, 1)
 
         self.grayCheckBox = QCheckBox(self.otherTab)
         self.grayCheckBox.setObjectName(u"grayCheckBox")
@@ -120,22 +100,52 @@ class Ui_MainWindow(object):
         self.grayCheckBox.setTabletTracking(False)
         self.grayCheckBox.setChecked(True)
 
-        self.fileLayout.addWidget(self.grayCheckBox, 9, 0, 1, 2)
+        self.fileLayout.addWidget(self.grayCheckBox, 10, 0, 1, 2)
 
-        self.originFileLineEdit = QLineEdit(self.otherTab)
-        self.originFileLineEdit.setObjectName(u"originFileLineEdit")
+        self.encodedLineEdit = QLineEdit(self.otherTab)
+        self.encodedLineEdit.setObjectName(u"encodedLineEdit")
 
-        self.fileLayout.addWidget(self.originFileLineEdit, 1, 0, 1, 2)
+        self.fileLayout.addWidget(self.encodedLineEdit, 5, 0, 1, 2)
+
+        self.encodedSizeLabel = QLabel(self.otherTab)
+        self.encodedSizeLabel.setObjectName(u"encodedSizeLabel")
+
+        self.fileLayout.addWidget(self.encodedSizeLabel, 6, 0, 1, 1)
+
+        self.decodedFileLabel = QLabel(self.otherTab)
+        self.decodedFileLabel.setObjectName(u"decodedFileLabel")
+
+        self.fileLayout.addWidget(self.decodedFileLabel, 7, 0, 1, 1)
+
+        self.selectOriginFileButton = QPushButton(self.otherTab)
+        self.selectOriginFileButton.setObjectName(u"selectOriginFileButton")
+
+        self.fileLayout.addWidget(self.selectOriginFileButton, 1, 1, 1, 1)
 
         self.PSNRLabel = QLabel(self.otherTab)
         self.PSNRLabel.setObjectName(u"PSNRLabel")
 
-        self.fileLayout.addWidget(self.PSNRLabel, 11, 0, 1, 1)
+        self.fileLayout.addWidget(self.PSNRLabel, 12, 0, 1, 1)
 
-        self.PSNRValueLabel = QLabel(self.otherTab)
-        self.PSNRValueLabel.setObjectName(u"PSNRValueLabel")
+        self.encodedFileLabel = QLabel(self.otherTab)
+        self.encodedFileLabel.setObjectName(u"encodedFileLabel")
 
-        self.fileLayout.addWidget(self.PSNRValueLabel, 11, 1, 1, 1)
+        self.fileLayout.addWidget(self.encodedFileLabel, 4, 0, 1, 1)
+
+        self.encodedSizeNumberLabel = QLabel(self.otherTab)
+        self.encodedSizeNumberLabel.setObjectName(u"encodedSizeNumberLabel")
+
+        self.fileLayout.addWidget(self.encodedSizeNumberLabel, 6, 1, 1, 1)
+
+        self.dataSizeLabel = QLabel(self.otherTab)
+        self.dataSizeLabel.setObjectName(u"dataSizeLabel")
+
+        self.fileLayout.addWidget(self.dataSizeLabel, 0, 0, 1, 1)
+
+        self.dataSizeNumberLabel = QLabel(self.otherTab)
+        self.dataSizeNumberLabel.setObjectName(u"dataSizeNumberLabel")
+
+        self.fileLayout.addWidget(self.dataSizeNumberLabel, 0, 1, 1, 1)
 
 
         self.verticalLayout.addLayout(self.fileLayout)
@@ -347,20 +357,22 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.originSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u5927\u5c0f\uff1a", None))
-        self.decodedSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u5927\u5c0f\uff1a", None))
-        self.decodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u89e3\u7801\u6587\u4ef6\u540d\uff1a", None))
-        self.selectOriginFileButton.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6e90\u56fe\u7247", None))
-        self.encodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u7801\u6587\u4ef6\u540d\uff1a", None))
         self.originSizeNumberLabel.setText(QCoreApplication.translate("MainWindow", u"0", None))
-        self.encodedSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u5927\u5c0f\uff1a", None))
         self.decodedSizeNumberLabel.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.encodeButton.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u7801", None))
         self.decodeButton.setText(QCoreApplication.translate("MainWindow", u"\u89e3\u7801", None))
-        self.encodedSizeNumberLabel.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.PSNRValueLabel.setText("")
+        self.decodedSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u5927\u5c0f\uff1a", None))
         self.originFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u539f\u59cb\u6587\u4ef6\uff1a", None))
         self.grayCheckBox.setText(QCoreApplication.translate("MainWindow", u"\u5c0f\u6ce2\u53d8\u6362\u5c55\u793a\u7070\u5ea6\u56fe", None))
+        self.encodedSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u5927\u5c0f\uff1a", None))
+        self.decodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u89e3\u7801\u6587\u4ef6\u540d\uff1a", None))
+        self.selectOriginFileButton.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6e90\u56fe\u7247", None))
         self.PSNRLabel.setText(QCoreApplication.translate("MainWindow", u"PSNR:", None))
-        self.PSNRValueLabel.setText("")
+        self.encodedFileLabel.setText(QCoreApplication.translate("MainWindow", u"\u7f16\u7801\u6587\u4ef6\u540d\uff1a", None))
+        self.encodedSizeNumberLabel.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.dataSizeLabel.setText(QCoreApplication.translate("MainWindow", u"\u6570\u636e\u5927\u5c0f\uff1a", None))
+        self.dataSizeNumberLabel.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.settingTab.setTabText(self.settingTab.indexOf(self.otherTab), QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u8bbe\u7f6e", None))
         self.tileSizeMaxLabel.setText(QCoreApplication.translate("MainWindow", u"Max:", None))
         self.tileSizeMinLabel.setText(QCoreApplication.translate("MainWindow", u"Min:", None))
