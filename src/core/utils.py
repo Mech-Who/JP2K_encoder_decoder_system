@@ -61,17 +61,12 @@ def get_correct_size(size: int) -> tuple:
     return current_size, unit
 
 
-def calculate_bpp(img):
-    # 计算像素总数
-    total_pixels = img.size
-
-    # 计算图像的总位数
-    total_bits = total_pixels * img.itemsize * 8
-
-    # 计算bpp
-    bpp = total_bits / total_pixels
-
-    return bpp
+def bpp(img_h, img_w, file_byte):
+    """
+    比特率(bpp)可以通过图像的压缩大小和图像的像素数量来计算：
+    bpp= (file_byte * 8) / (h x w)
+    """
+    return file_byte * 8 / (img_h * img_w)
 
 
 def psnr(old: str, new: str):
