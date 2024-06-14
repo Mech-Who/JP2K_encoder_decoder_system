@@ -10,6 +10,7 @@ import cv2
 import pywt
 import numpy as np
 from PIL import Image
+from bitarray import bitarray
 
 import src.core.utils as utils
 
@@ -59,13 +60,13 @@ class JP2KEncoder(Encoder):
     def read(self, img_path: str) -> np.ndarray:
         return cv2.imread(img_path)
 
-    def save(self, save_path: str, bitstream: ByteString) -> None:
+    def save(self, save_path: str, bitstream: bitarray) -> None:
         save_path = Path(save_path)
         # 创建文件
         if not save_path.exists():
             save_path.touch()
         with open(str(save_path), 'wb') as f:
-            f.write(bitstream)
+            bitstream.tofile(f)
 
     def get_wavelet_image(self, img: np.ndarray) -> Tuple:
         lt_0, (rt_0, lb_0, rb_0) = JP2KEncoder.discrete_wavelet_transform_2d(
@@ -210,9 +211,9 @@ class JP2KEncoder(Encoder):
         :param q_faactor: 量化因子
         :return: 码流
         """
-        bitstream = bytearray()
+        bitstream = bitarray()
         huffman_trees = []
-
+        temp = bitarray()
         for block in blocks:
             # 对每个通道进行处理
             for channel in range(block.shape[2]):
@@ -225,11 +226,30 @@ class JP2KEncoder(Encoder):
                     huffman_tree)
 
                 # 将编码后的数据写入码流
-                bitstream += struct.pack('I', len(encoded_data))
-                bitstream += encoded_data.encode('utf-8')
-                bitstream += struct.pack('I', len(serialized_tree))
+                # MODIFY: 存储优化
+                data = bitarray(encoded_data)
+                # 数据长度(记录数据位数，占据4字节)
+                temp.clear()
+                temp.frombytes(struct.pack('I', len(data)))
+                bitstream.extend(temp)
+                # 数据
+                bitstream.extend(data)
+                # 哈夫曼树的长度
+                temp.clear()
+                temp.frombytes(struct.pack('I', len(serialized_tree)))
+                bitstream.extend(temp)
+                # 哈夫曼的键值对
                 for symbol, code in serialized_tree:
-                    bitstream += struct.pack('i', symbol)
-                    bitstream += struct.pack('I', len(code))
-                    bitstream += code.encode('utf-8')
+                    # symbol
+                    temp.clear()
+                    temp.frombytes(struct.pack('i', symbol))
+                    bitstream.extend(temp)
+                    # code 位数
+                    # MODIFY: 存储优化
+                    data = bitarray(code)
+                    temp.clear()
+                    temp.frombytes(struct.pack('I', len(data)))
+                    bitstream.extend(temp)
+                    # code值
+                    bitstream.extend(data)
         return bitstream, huffman_trees

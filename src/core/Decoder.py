@@ -5,11 +5,12 @@ from typing import Union, List, Dict, Tuple, ByteString
 import cv2
 import pywt
 import numpy as np
+from bitarray import bitarray
 
 import src.core.utils as utils
 
 BYTE_LENGTH = 4
-
+BYTE_BIT = BYTE_LENGTH * 8
 
 class Decoder(ABC):
     """
@@ -61,9 +62,9 @@ class JP2KDecoder(Decoder):
         return decode_img
 
     def read(self, image_path: str) -> ByteString:
-        bitstream = None
+        bitstream = bitarray()
         with open(image_path, 'rb') as f:
-            bitstream = f.read()
+            bitstream.fromfile(f)
         return bitstream
 
     def save(self, save_path: str, img: np.ndarray) -> None:
@@ -92,7 +93,7 @@ class JP2KDecoder(Decoder):
         return decoded_data
 
     @staticmethod
-    def decode_bitstream(bitstream: ByteString) -> List[List[int]]:
+    def decode_bitstream(bitstream: bitarray) -> List[List[int]]:
         """
         解码码流
         :param bitstream: 文件码流
@@ -101,38 +102,45 @@ class JP2KDecoder(Decoder):
         offset = 0
         data_blocks = []
         while offset < len(bitstream):
+            if (len(bitstream) - offset) < 8:
+                break
             # 读取编码数据的长度
-            encoded_length = struct.unpack_from('I', bitstream, offset)[0]
-            offset += BYTE_LENGTH
-
+            # MODIFY: 存储优化
+            byte_4 = bitstream[offset:offset+BYTE_BIT].tobytes()
+            data_length = struct.unpack('I', byte_4)[0]
+            offset += BYTE_BIT
             # 读取编码数据
-            encoded_data = bitstream[offset:offset + encoded_length]
-            encoded_data = encoded_data.decode('utf-8')
-            offset += encoded_length
+            encoded_data = bitstream[offset:offset + data_length].to01()
+            offset += data_length
 
             # 读取霍夫曼树的长度
-            huffman_tree_length = struct.unpack_from('I', bitstream, offset)[0]
-            offset += BYTE_LENGTH
-
+            byte_4 = bitstream[offset:offset+BYTE_BIT].tobytes()
+            huffman_tree_length = struct.unpack('I', byte_4)[0]
+            offset += BYTE_BIT
+            
             # 读取霍夫曼树
             serialized_tree = []
             for _ in range(huffman_tree_length):
-                symbol = struct.unpack_from('i', bitstream, offset)[0]
-                offset += BYTE_LENGTH
+                # symbol
+                byte_4 = bitstream[offset:offset+BYTE_BIT].tobytes()
+                symbol = struct.unpack('i', byte_4)[0]
+                offset += BYTE_BIT
 
-                code_length = struct.unpack_from('I', bitstream, offset)[0]
-                offset += BYTE_LENGTH
-
-                code = bitstream[offset:offset + code_length]
-                code = code.decode('utf-8')
-                offset += code_length
-
+                # MODIFY: 存储优化
+                # code_length
+                byte_4 = bitstream[offset:offset+BYTE_BIT].tobytes()
+                data_length = struct.unpack('I', byte_4)[0]
+                offset += BYTE_BIT
+                # code
+                code = bitstream[offset:offset + data_length].to01()
+                offset += data_length
+                
                 serialized_tree.append((symbol, code))
-
-            huffman_tree = JP2KDecoder.deserialize_huffman_tree(
-                serialized_tree)
-            decoded_data = JP2KDecoder.huffman_decoding(
-                encoded_data, huffman_tree)
+            
+            # 反序列化霍夫曼树
+            huffman_tree = JP2KDecoder.deserialize_huffman_tree(serialized_tree)
+            # 霍夫曼解码
+            decoded_data = JP2KDecoder.huffman_decoding(encoded_data, huffman_tree)
 
             # 将解码数据添加到块列表
             data_blocks.append(decoded_data)
