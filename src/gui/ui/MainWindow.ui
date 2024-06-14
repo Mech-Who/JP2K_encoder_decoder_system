@@ -30,15 +30,11 @@
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <layout class="QGridLayout" name="fileLayout">
-          <item row="3" column="0">
-           <widget class="QLabel" name="originSizeLabel">
-            <property name="text">
-             <string>文件大小：</string>
-            </property>
-           </widget>
+          <item row="2" column="0" colspan="2">
+           <widget class="QLineEdit" name="originFileLineEdit"/>
           </item>
-          <item row="3" column="1">
-           <widget class="QLabel" name="originSizeNumberLabel">
+          <item row="6" column="1">
+           <widget class="QLabel" name="encodedSizeNumberLabel">
             <property name="text">
              <string>0</string>
             </property>
@@ -51,48 +47,17 @@
             </property>
            </widget>
           </item>
-          <item row="11" column="0" colspan="2">
-           <layout class="QHBoxLayout" name="buttonLayout">
-            <item>
-             <widget class="QPushButton" name="encodeButton">
-              <property name="text">
-               <string>编码</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="decodeButton">
-              <property name="text">
-               <string>解码</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="12" column="1">
-           <widget class="QLabel" name="PSNRValueLabel">
+          <item row="0" column="1">
+           <widget class="QLabel" name="dataSizeNumberLabel">
             <property name="text">
-             <string/>
+             <string>0</string>
             </property>
            </widget>
           </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="decodedSizeLabel">
+          <item row="3" column="1">
+           <widget class="QLabel" name="originSizeNumberLabel">
             <property name="text">
-             <string>文件大小：</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0" colspan="2">
-           <widget class="QLineEdit" name="decodedLineEdit"/>
-          </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QLineEdit" name="originFileLineEdit"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="originFileLabel">
-            <property name="text">
-             <string>原始文件：</string>
+             <string>0</string>
             </property>
            </widget>
           </item>
@@ -112,48 +77,20 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0" colspan="2">
-           <widget class="QLineEdit" name="encodedLineEdit"/>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="encodedSizeLabel">
+          <item row="3" column="0">
+           <widget class="QLabel" name="originSizeLabel">
             <property name="text">
              <string>文件大小：</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="decodedFileLabel">
-            <property name="text">
-             <string>解码文件名：</string>
-            </property>
-           </widget>
+          <item row="8" column="0" colspan="2">
+           <widget class="QLineEdit" name="decodedLineEdit"/>
           </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="selectOriginFileButton">
-            <property name="text">
-             <string>选择源图片</string>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0">
+          <item row="13" column="0">
            <widget class="QLabel" name="PSNRLabel">
             <property name="text">
              <string>PSNR:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="encodedFileLabel">
-            <property name="text">
-             <string>编码文件名：</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QLabel" name="encodedSizeNumberLabel">
-            <property name="text">
-             <string>0</string>
             </property>
            </widget>
           </item>
@@ -164,10 +101,94 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="dataSizeNumberLabel">
+          <item row="5" column="0" colspan="2">
+           <widget class="QLineEdit" name="encodedLineEdit"/>
+          </item>
+          <item row="11" column="0" colspan="2">
+           <layout class="QHBoxLayout" name="buttonLayout">
+            <item>
+             <widget class="QPushButton" name="encodeButton">
+              <property name="text">
+               <string>编码</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="decodeButton">
+              <property name="text">
+               <string>解码</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="originFileLabel">
             <property name="text">
-             <string>0</string>
+             <string>原始文件：</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="encodedSizeLabel">
+            <property name="text">
+             <string>文件大小：</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="decodedSizeLabel">
+            <property name="text">
+             <string>文件大小：</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="encodedFileLabel">
+            <property name="text">
+             <string>编码文件名：</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="decodedFileLabel">
+            <property name="text">
+             <string>解码文件名：</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0" colspan="2">
+           <widget class="QPushButton" name="chartButton">
+            <property name="text">
+             <string>绘制PSNR-bpp图</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="selectOriginFileButton">
+            <property name="text">
+             <string>选择源图片</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="QLabel" name="PSNRValueLabel">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="0">
+           <widget class="QLabel" name="BPPLabel">
+            <property name="text">
+             <string>BPP:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="1">
+           <widget class="QLabel" name="BPPValueLabel">
+            <property name="text">
+             <string/>
             </property>
            </widget>
           </item>
@@ -382,17 +403,7 @@
        <attribute name="title">
         <string>图表展示</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <item>
-         <widget class="QWebEngineView" name="graphWebEngineView">
-          <property name="url">
-           <url>
-            <string>about:blank</string>
-           </url>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <layout class="QHBoxLayout" name="horizontalLayout_4"/>
       </widget>
      </widget>
     </item>
@@ -412,13 +423,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebEngineView</class>
-   <extends>QWidget</extends>
-   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

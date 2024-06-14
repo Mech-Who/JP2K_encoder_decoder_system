@@ -3,11 +3,11 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets, QtGui, QtCharts
 
 from src.gui.gen.ui_mainwindow import Ui_MainWindow
 from src.core import JP2KDecoder, JP2KEncoder
-from src.config_ import SRC_IMG_ROOT, WAVE_IMG_ROOT, ENCODED_IMG_ROOT, DECODED_IMG_ROOT
+from src.config_ import SRC_IMG_ROOT, TEST_IMG_ROOT, ENCODED_IMG_ROOT, DECODED_IMG_ROOT
 import src.core.utils as utils
 
 
@@ -102,10 +102,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # image show
         self.ui.originGraphicsView
         self.ui.waveGraphicsView
-        # self.ui.ltGraphicsView
-        # self.ui.rtGraphicsView
-        # self.ui.lbGraphicsView
-        # self.ui.rbGraphicsView
         self.ui.decodedGraphicsView
 
     def signal_slot_init(self):
@@ -138,6 +134,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.set_file_size_label(self.origin_img_path,
                                  self.ui.originSizeNumberLabel)
         img = cv2.imread(str(self.origin_img_path))
+        self.origin_img = cv2.imread(self.origin_img_path)
         file_size = sys.getsizeof(img)
         value, unit = utils.get_correct_size(file_size)
         self.ui.dataSizeNumberLabel.setText(f"{value:.2f} {unit}")
@@ -165,7 +162,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.encoded_img_path, self.ui.encodedSizeNumberLabel)
 
     # # 设置编码文件名
-
     @QtCore.Slot()
     def on_decodedLineEdit_textEdited(self):
         decoded_filename = self.ui.decodedLineEdit.text()
@@ -224,11 +220,80 @@ class MainWindow(QtWidgets.QMainWindow):
         self.set_file_size_label(
             self.decoded_img_path, self.ui.decodedSizeNumberLabel)
 
+        # 计算bpp并显示
+        img_pixel = self.origin_img.shape[0] * self.origin_img.shape[1]
+        file_size = self.decoded_img_path.stat().st_size
+        self.bpp = utils.bpp(img_pixel, file_size)
+        self.ui.BPPValueLabel.setText(str(self.bpp))
+
         # 计算psnr并显示
         self.psnr = utils.psnr(self.origin_img_path, self.decoded_img_path)
         self.ui.PSNRValueLabel.setText(str(self.psnr))
 
         self.decode_finished.emit()  # 发送信号，显示解码图像
+
+    # # 绘制 PSNR-bpp 图表按钮
+    @QtCore.Slot()
+    def on_chartButton_clicked(self):
+        """绘制 PSNR-bpp 图并展示"""
+        # 展示图表
+        # # 创建绘图组件
+        chart = QtCharts.QChart()
+        chart.setTitle("PSNR-bpp")
+        chart_view = QtCharts.QChartView(chart, self.ui.graphTab)
+        chart_view.setGeometry(
+            0, 0, self.ui.graphTab.width(), self.ui.graphTab.height())
+        # # 设置数据
+        bpp_list, psnr_list = self.calculate_data()
+        # bpp_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        # psnr_list = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+        series = QtCharts.QLineSeries()
+        for bpp, psnr in zip(bpp_list, psnr_list):
+            series.append(bpp, psnr)
+        chart.addSeries(series)
+        # # 设置坐标轴
+        # # # x 轴
+        axis_x = QtCharts.QValueAxis()
+        axis_x.setTitleText("Bits Per Pixel (bpp)")
+        axis_x.setRange(min(bpp_list)-1, max(bpp_list)+1)
+        chart.setAxisX(axis_x, series)
+        # # # y 轴
+        axis_y = QtCharts.QValueAxis()
+        axis_y.setTitleText("PSNR (dB)")
+        axis_y.setRange(min(psnr_list)-5, max(psnr_list)+5)
+        chart.setAxisY(axis_y, series)
+        # 将量化系数设置回原来的
+        self.encoder.q_factor = self.q_factor
+        self.decoder.q_factor = self.q_factor
+
+    def calculate_data(self):
+        bpp_list = []
+        psnr_list = []
+        for q_factor in range(1, 25):
+            # 设置量化系数
+            self.encoder.q_factor = q_factor
+            self.decoder.q_factor = q_factor
+            # 编码保存
+            bitstream = self.encoder.encode(self.origin_img)
+            encode_path = TEST_IMG_ROOT / f"test_{q_factor}.myjp"
+            self.encoder.save(encode_path, bitstream)
+            # 计算 bpp
+            img_pixel = self.origin_img.shape[0] * self.origin_img.shape[1]
+            file_size = encode_path.stat().st_size
+            bpp = utils.bpp(img_pixel, file_size)
+            # 解码保存
+            decoded_img = self.decoder.decode(bitstream)
+            decode_path = TEST_IMG_ROOT / f"test_{q_factor}.png"
+            self.decoder.save(decode_path, decoded_img)
+            # 计算 psnr
+            psnr = utils.psnr(self.origin_img_path, decode_path)
+            print(f"{q_factor=}, {bpp=}, {psnr=}")
+            # 记录结果
+            bpp_list.append(bpp)
+            psnr_list.append(psnr)
+        print(f"{bpp_list=}")
+        print(f"{psnr_list=}")
+        return bpp_list, psnr_list
 
     # 压缩设置
     # # 分块大小
