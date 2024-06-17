@@ -48,9 +48,9 @@ class JP2KDecoder(Decoder):
 
     def decode(self, bitstream: ByteString) -> np.ndarray:
         """
-        针对JP2K格式的文件进行解码，并保存到新文件
-        :param image_path: JP2K格式的文件路径
-        :param save_path: 新文件路径
+        针对JP2K格式的文件进行解码
+        :param bitstream: 新文件路径的码流
+        :return: 解码后的图像数据
         """
         decoded_blocks = JP2KDecoder.decode_bitstream(bitstream)
         decoded_tiles = JP2KDecoder.get_tiles_from_data(
