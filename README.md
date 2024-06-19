@@ -13,6 +13,25 @@
 
 ## 安装与使用
 
+0. 数据集准备
+
+    请在项目根目录下创建`img`目录，并在其中创建`src_img`、`test_img`、`encoded_img`、`decoded_img`四个目录，将kodok数据集放在`src_img`目录下，最终结构如下所示：
+
+      ```python
+      img
+      ├─decoded_img
+      ├─encoded_img
+      ├─src_img
+      │  │
+      │  └─kodok
+      │          kodim01.png
+      │          kodim02.png
+      │          kodim03.png
+      │          ...
+      │
+      └─test_img
+      ```
+
 1. 安装
 
    - 本项目使用 Python 3.9，推荐使用 Miniconda 或 Anaconda 创建一个虚拟环境：`conda create -n ic python=3.9 -y`
