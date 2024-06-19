@@ -15,22 +15,22 @@
 
 0. 数据集准备
 
-    请在项目根目录下创建`img`目录，并在其中创建`src_img`、`test_img`、`encoded_img`、`decoded_img`四个目录，将kodok数据集放在`src_img`目录下，最终结构如下所示：
+   请在项目根目录下创建`img`目录，并在其中创建`src_img`、`test_img`、`encoded_img`、`decoded_img`四个目录，将 kodok 数据集放在`src_img`目录下，最终结构如下所示：
 
-      ```python
-      img
-      ├─decoded_img
-      ├─encoded_img
-      ├─src_img
-      │  │
-      │  └─kodok
-      │          kodim01.png
-      │          kodim02.png
-      │          kodim03.png
-      │          ...
-      │
-      └─test_img
-      ```
+   ```python
+   img
+   ├─decoded_img
+   ├─encoded_img
+   ├─src_img
+   │  │
+   │  └─kodok
+   │          kodim01.png
+   │          kodim02.png
+   │          kodim03.png
+   │          ...
+   │
+   └─test_img
+   ```
 
 1. 安装
 
@@ -40,7 +40,7 @@
 
 2. 使用
 
-   - 如果需要运行 GUI 软件，请使用：`python main.py`
+   - 如果需要运行 GUI 软件，请在 windows 环境下或具有桌面的 linux 下使用命令：`python main.py`
    - 如果需要查看代码运行案例，请查看 `explain.ipynb` notebook 文件
 
 ## 一、开发环境
@@ -141,3 +141,8 @@ UI 内容：
   - [ ]: EBCOT编码
     - [ ]: Tier1 层编码
     - [ ]: Tier2 层编码
+
+## 五、其他说明
+
+- `misc`目录下存放了流程测试用的ipynb文件，以及部分所需的`utils`代码，完整的`utils`代码在`src\core\utils.py`文件中
+- `scripts`目录下提供便于linux（sh脚本）和windows（bat脚本）的开发脚本，也提供了运行单元测试的脚本（仅提供了基本测试），敬请参考。
