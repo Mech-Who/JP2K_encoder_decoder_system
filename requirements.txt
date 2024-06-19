@@ -1,0 +1,10 @@
+numpy
+matplotlib==3.9.0
+bitarray==2.9.2
+pillow
+opencv-python==4.10.0.82
+ipykernel
+pywavelets
+scikit-image==0.22.0
+scipy==1.13.1
+PySide6==6.7.1

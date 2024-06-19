@@ -11,23 +11,41 @@
 >
 > - kodak24：[kodak24 数据集下载地址](https://r0k.us/graphics/kodak/)
 
+## 安装与使用
+
+1. 安装
+
+   - 本项目使用 Python 3.9，推荐使用 Miniconda 或 Anaconda 创建一个虚拟环境：`conda create -n ic python=3.9 -y`
+   - 激活虚拟环境：`conda activate ic`
+   - 安装本项目所需的依赖包： `pip install -r requirements.txt`
+
+2. 使用
+
+   - 如果需要运行 GUI 软件，请使用：`python main.py`
+   - 如果需要查看代码运行案例，请查看 `explain.ipynb` notebook 文件
+
 ## 一、开发环境
 
 运行 ipynb 文件所需的依赖包：
 
 - ipykernel：实现 notebook 方式
-- pandas：查看数据对象
+- pandas：便于查看数据对象
 
 核心功能所需安装的依赖包：
 
-- pillow
 - numpy
 - PyWavelets
+- pillow
 - opencv-python
+- bitarray
 
 构建 GUI 所需的依赖包：
 
 - pyside6
+
+评估编解码器性能所需的安装包：
+
+- scikit-image
 
 ## 二、主要内容
 
@@ -88,13 +106,14 @@ UI 内容：
 - [x] 编解码流程实现
 - [x] 函数封装
 - [x] 类封装
-- [ ] 用户界面封装
+- [x] 用户界面封装
   - [x] 原图像展示
   - [x] 解码图像展示
   - [x] 小波图像展示
   - [x] 小波图像优化
   - [x] 图片文件大小显示
-  - [ ] 压缩率图表展示
+  - [x] 压缩率图表展示
+- [x] 编解码器评估代码实现
 - [ ]: 编解码过程细化
   - [ ]: 直流平移
   - [ ]: 色彩分量变换
